@@ -7,7 +7,7 @@ export const dashboardController = {
       const loggedInUser = request.auth.credentials;
       const playlists = await db.playlistStore.getUserPlaylists(loggedInUser._id);
       const viewData = {
-        title: "Playtime Dashboard",
+        title: "Placemark Dashboard",
         user: loggedInUser,
         playlists: playlists,
       };
@@ -19,17 +19,27 @@ export const dashboardController = {
     validate: {
       payload: PlaylistSpec,
       options: { abortEarly: false },
-      failAction: function (request, h, error) {
-        return h.view("dashboard-view", { title: "Add Playlist error", errors: error.details }).takeover().code(400);
+      failAction: async function (request, h, error) {
+        const loggedInUser = request.auth.credentials;
+        const playlists = await db.playlistStore.getUserPlaylists(loggedInUser._id);
+        return h
+          .view("dashboard-view", {
+            title: "Add Category error",
+            user: loggedInUser,
+            playlists: playlists,
+            errors: error.details,
+          })
+          .takeover()
+          .code(400);
       },
     },
     handler: async function (request, h) {
       const loggedInUser = request.auth.credentials;
-      const newPlayList = {
+      const newPlaylist = {
         userid: loggedInUser._id,
         title: request.payload.title,
       };
-      await db.playlistStore.addPlaylist(newPlayList);
+      await db.playlistStore.addPlaylist(newPlaylist);
       return h.redirect("/dashboard");
     },
   },
@@ -37,7 +47,10 @@ export const dashboardController = {
   deletePlaylist: {
     handler: async function (request, h) {
       const playlist = await db.playlistStore.getPlaylistById(request.params.id);
-      await db.playlistStore.deletePlaylistById(playlist._id);
+      if (playlist && playlist.tracks) {
+        await Promise.all(playlist.tracks.map((track) => db.trackStore.deleteTrack(track._id)));
+      }
+      await db.playlistStore.deletePlaylistById(request.params.id);
       return h.redirect("/dashboard");
     },
   },

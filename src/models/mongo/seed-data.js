@@ -4,6 +4,7 @@ export const seedData = {
     homer: {
       firstName: "Homer",
       lastName: "Simpson",
+      isAdmin: true,
       email: "homer@simpson.com",
       password: "secret"
     },
@@ -24,7 +25,7 @@ export const seedData = {
     _model: "Playlist",
     mozart: {
       title: "Mozart Favourites",
-      userid: "->users.bart"
+      userid: "->users.homer"
     }
   },
   tracks: {

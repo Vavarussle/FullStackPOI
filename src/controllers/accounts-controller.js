@@ -5,13 +5,13 @@ export const accountsController = {
   index: {
     auth: false,
     handler: function (request, h) {
-      return h.view("main", { title: "Welcome to Playlist" });
+      return h.view("main", { title: "Welcome to Placemark" });
     },
   },
   showSignup: {
     auth: false,
     handler: function (request, h) {
-      return h.view("signup-view", { title: "Sign up for Playlist" });
+      return h.view("signup-view", { title: "Sign up for Placemark" });
     },
   },
   signup: {
@@ -32,7 +32,7 @@ export const accountsController = {
   showLogin: {
     auth: false,
     handler: function (request, h) {
-      return h.view("login-view", { title: "Login to Playlist" });
+      return h.view("login-view", { title: "Login to Placemark" });
     },
   },
   login: {
@@ -56,6 +56,27 @@ export const accountsController = {
   },
   logout: {
     handler: function (request, h) {
+      request.cookieAuth.clear();
+      return h.redirect("/");
+    },
+  },
+
+  deleteAccount: {
+    handler: async function (request, h) {
+      const loggedInUser = request.auth.credentials;
+      const playlists = await db.playlistStore.getUserPlaylists(loggedInUser._id);
+
+      await Promise.all(
+        playlists.map(async (playlist) => {
+          const fullPlaylist = await db.playlistStore.getPlaylistById(playlist._id);
+          if (fullPlaylist && fullPlaylist.tracks) {
+            await Promise.all(fullPlaylist.tracks.map((track) => db.trackStore.deleteTrack(track._id)));
+          }
+          await db.playlistStore.deletePlaylistById(playlist._id);
+        }),
+      );
+
+      await db.userStore.deleteUserById(loggedInUser._id);
       request.cookieAuth.clear();
       return h.redirect("/");
     },

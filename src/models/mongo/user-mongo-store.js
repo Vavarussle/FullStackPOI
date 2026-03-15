@@ -17,8 +17,7 @@ export const userMongoStore = {
   async addUser(user) {
     const newUser = new User(user);
     const userObj = await newUser.save();
-    const u = await this.getUserById(userObj._id);
-    return u;
+    return this.getUserById(userObj._id);
   },
 
   async getUserByEmail(email) {
@@ -28,7 +27,7 @@ export const userMongoStore = {
 
   async deleteUserById(id) {
     try {
-      await User.deleteOne({ _id: id });
+      await User.findByIdAndDelete({ _id: id });
     } catch (error) {
       console.log("bad id");
     }
@@ -36,5 +35,5 @@ export const userMongoStore = {
 
   async deleteAll() {
     await User.deleteMany({});
-  }
+  },
 };

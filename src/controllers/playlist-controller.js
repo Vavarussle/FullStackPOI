@@ -7,7 +7,8 @@ export const playlistController = {
     handler: async function (request, h) {
       const playlist = await db.playlistStore.getPlaylistById(request.params.id);
       const viewData = {
-        title: "Playlist",
+        title: "Category",
+        user: request.auth.credentials,
         playlist: playlist,
       };
       return h.view("playlist-view", viewData);
@@ -19,15 +20,16 @@ export const playlistController = {
       payload: TrackSpec,
       options: { abortEarly: false },
       failAction: function (request, h, error) {
-        return h.view("playlist-view", { title: "Add track error", errors: error.details }).takeover().code(400);
+        return h.view("playlist-view", { title: "Add placemark error", errors: error.details }).takeover().code(400);
       },
     },
     handler: async function (request, h) {
       const playlist = await db.playlistStore.getPlaylistById(request.params.id);
       const newTrack = {
         title: request.payload.title,
-        artist: request.payload.artist,
-        duration: Number(request.payload.duration),
+        description: request.payload.description,
+        latitude: Number(request.payload.latitude),
+        longitude: Number(request.payload.longitude),
       };
       await db.trackStore.addTrack(playlist._id, newTrack);
       return h.redirect(`/playlist/${playlist._id}`);

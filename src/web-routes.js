@@ -3,6 +3,7 @@ import { accountsController } from "./controllers/accounts-controller.js";
 import { dashboardController } from "./controllers/dashboard-controller.js";
 import { playlistController } from "./controllers/playlist-controller.js";
 import { trackController } from "./controllers/track-controller.js";
+import { adminController } from "./controllers/admin-controller.js";
 
 export const webRoutes = [
   { method: "GET", path: "/", config: accountsController.index },
@@ -11,12 +12,16 @@ export const webRoutes = [
   { method: "GET", path: "/logout", config: accountsController.logout },
   { method: "POST", path: "/register", config: accountsController.signup },
   { method: "POST", path: "/authenticate", config: accountsController.login },
+  { method: "GET", path: "/account/delete", config: accountsController.deleteAccount },
 
   { method: "GET", path: "/about", config: aboutController.index },
 
   { method: "GET", path: "/dashboard", config: dashboardController.index },
   { method: "POST", path: "/dashboard/addplaylist", config: dashboardController.addPlaylist },
   { method: "GET", path: "/dashboard/deleteplaylist/{id}", config: dashboardController.deletePlaylist },
+
+  { method: "GET", path: "/admin", config: adminController.index },
+  { method: "GET", path: "/admin/deleteuser/{id}", config: adminController.deleteUser },
 
   { method: "GET", path: "/playlist/{id}", config: playlistController.index },
   { method: "POST", path: "/playlist/{id}/addtrack", config: playlistController.addTrack },
@@ -26,6 +31,8 @@ export const webRoutes = [
   { method: "POST", path: "/track/{id}/updatetrack/{trackid}", config: trackController.update },
 
   { method: "POST", path: "/playlist/{id}/uploadimage", config: playlistController.uploadImage },
+
+  { method: "POST", path: "/track/{id}/uploadimage", config: trackController.uploadImage },
 
   { method: "GET", path: "/{param*}", handler: { directory: { path: "./public" } }, options: { auth: false } },
 ];

@@ -19,14 +19,15 @@ export const playlistMongoStore = {
   },
 
   async addPlaylist(playlist) {
-    const newPlaylist = new Playlist(playlist);
+    const playlistToSave = { ...playlist };
+    const newPlaylist = new Playlist(playlistToSave);
     const playlistObj = await newPlaylist.save();
     return this.getPlaylistById(playlistObj._id);
   },
 
   async getUserPlaylists(id) {
-    const playlist = await Playlist.find({ userid: id }).lean();
-    return playlist;
+    const playlists = await Playlist.find({ userid: id }).lean();
+    return playlists;
   },
 
   async deletePlaylistById(id) {
@@ -44,7 +45,6 @@ export const playlistMongoStore = {
   async updatePlaylist(updatedPlaylist) {
     const playlist = await Playlist.findOne({ _id: updatedPlaylist._id });
     playlist.title = updatedPlaylist.title;
-    playlist.img = updatedPlaylist.img;
     await playlist.save();
   },
 };

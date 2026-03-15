@@ -1,66 +1,85 @@
 import { assert } from "chai";
-import { assertSubset } from "../test-utils.js";
 import { playtimeService } from "./playtime-service.js";
-import { maggie, maggieCredentials, testUsers } from "../fixtures.js";
-
-const users = new Array(testUsers.length);
+import { maggie, adminUser, adminCredentials, testUsers } from "../fixtures.js";
+import { assertSubset } from "../test-utils.js";
 
 suite("User API tests", () => {
-  setup(async () => {
-    playtimeService.clearAuth();
-    await playtimeService.createUser(maggie);
-    await playtimeService.authenticate(maggieCredentials);
-    await playtimeService.deleteAllUsers();
-    for (let i = 0; i < testUsers.length; i += 1) {
-      // eslint-disable-next-line no-await-in-loop
-      users[0] = await playtimeService.createUser(testUsers[i]);
-    }
-    await playtimeService.createUser(maggie);
-    await playtimeService.authenticate(maggieCredentials);
-  });
   teardown(async () => {});
 
-  test("create a user", async () => {
-    const newUser = await playtimeService.createUser(maggie);
-    assertSubset(maggie, newUser);
-    assert.isDefined(newUser._id);
+  test("create user", async () => {
+    const returnedUser = await playtimeService.createUser(maggie);
+    assertSubset(maggie, returnedUser);
+    assert.isDefined(returnedUser._id);
   });
 
-  test("delete all user", async () => {
+  test("create user with admin flag", async () => {
+    const returnedUser = await playtimeService.createUser(adminUser);
+    assertSubset(adminUser, returnedUser);
+    assert.isDefined(returnedUser._id);
+  });
+
+  test("delete all users", async () => {
+    for (let i = 0; i < testUsers.length; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      await playtimeService.createUser(testUsers[i]);
+    }
     let returnedUsers = await playtimeService.getAllUsers();
-    assert.equal(returnedUsers.length, 4);
+    assert.equal(returnedUsers.length, testUsers.length);
     await playtimeService.deleteAllUsers();
-    await playtimeService.createUser(maggie);
-    await playtimeService.authenticate(maggieCredentials);
     returnedUsers = await playtimeService.getAllUsers();
-    assert.equal(returnedUsers.length, 1);
+    assert.equal(returnedUsers.length, 0);
   });
 
-  test("get a user", async () => {
-    const returnedUser = await playtimeService.getUser(users[0]._id);
-    assert.deepEqual(users[0], returnedUser);
+  test("get all users", async () => {
+    for (let i = 0; i < testUsers.length; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      await playtimeService.createUser(testUsers[i]);
+    }
+    const returnedUsers = await playtimeService.getAllUsers();
+    assert.equal(returnedUsers.length, testUsers.length);
+    for (let i = 0; i < returnedUsers.length; i += 1) {
+      assertSubset(testUsers[i], returnedUsers[i]);
+    }
   });
 
-  test("get a user - bad id", async () => {
+  test("get one user", async () => {
+    const user = await playtimeService.createUser(maggie);
+    const returnedUser = await playtimeService.getUser(user._id);
+    assert.deepEqual(user, returnedUser);
+  });
+
+  test("get one user - bad id", async () => {
     try {
-      const returnedUser = await playtimeService.getUser("1234");
-      assert.fail("Should not return a response");
+      await playtimeService.getUser("1234");
+      assert.fail("Should not return a user");
     } catch (error) {
-      assert(error.response.data.message === "No User with this id");
+      assert.equal(error.response.data.message, "No User with this id");
       assert.equal(error.response.data.statusCode, 503);
     }
   });
 
-  test("get a user - deleted user", async () => {
+  test("get one user - deleted user", async () => {
+    const user = await playtimeService.createUser(maggie);
     await playtimeService.deleteAllUsers();
-    await playtimeService.createUser(maggie);
-    await playtimeService.authenticate(maggieCredentials);
     try {
-      const returnedUser = await playtimeService.getUser(users[0]._id);
-      assert.fail("Should not return a response");
+      await playtimeService.getUser(user._id);
+      assert.fail("Should not return a user");
     } catch (error) {
-      assert(error.response.data.message === "No User with this id");
+      assert.equal(error.response.data.message, "No User with this id");
       assert.equal(error.response.data.statusCode, 404);
     }
+  });
+
+  test("admin can delete a user", async () => {
+    await playtimeService.deleteAllUsers();
+    const createdAdmin = await playtimeService.createUser(adminUser);
+    const createdUser = await playtimeService.createUser(maggie);
+
+    await playtimeService.authenticate(adminCredentials);
+    await playtimeService.deleteUser(createdUser._id);
+
+    const users = await playtimeService.getAllUsers();
+    assert.equal(users.length, 1);
+    assert.equal(users[0]._id, createdAdmin._id);
   });
 });

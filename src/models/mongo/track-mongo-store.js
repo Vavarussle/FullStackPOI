@@ -8,8 +8,8 @@ export const trackMongoStore = {
   },
 
   async addTrack(playlistId, track) {
-    track.playlistid = playlistId;
-    const newTrack = new Track(track);
+    const trackToSave = { ...track, playlistid: playlistId };
+    const newTrack = new Track(trackToSave);
     const trackObj = await newTrack.save();
     return this.getTrackById(trackObj._id);
   },
@@ -40,11 +40,12 @@ export const trackMongoStore = {
   },
 
   async updateTrack(track, updatedTrack) {
-    track.title = updatedTrack.title;
-    track.description = updatedTrack.description;
-    track.latitude = updatedTrack.latitude;
-    track.longitude = updatedTrack.longitude;
-    track.img = updatedTrack.img;
-    await track.save();
+    const trackDoc = await Track.findOne({ _id: track._id });
+    trackDoc.title = updatedTrack.title;
+    trackDoc.description = updatedTrack.description;
+    trackDoc.latitude = updatedTrack.latitude;
+    trackDoc.longitude = updatedTrack.longitude;
+    trackDoc.img = updatedTrack.img;
+    await trackDoc.save();
   },
 };

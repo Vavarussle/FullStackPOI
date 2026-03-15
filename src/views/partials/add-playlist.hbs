@@ -1,8 +1,11 @@
-
-  <form action="/dashboard/addplaylist" method="POST">
-    <div class="field">
-      <label class="label">Playlist Title</label>
-      <input class="input" type="text" placeholder="Enter playlist title" name="title">
+<form class="box" action="/dashboard/addplaylist" method="POST">
+  <label>Enter Category Details:</label>
+  <div class="field is-horizontal">
+    <div class="field-body">
+      <div class="field">
+        <input class="input" type="text" placeholder="Enter Category Name" name="title">
+      </div>
     </div>
-    <button class="button is-link">Add Playlist</button>
-  </form>
+  </div>
+  <button class="button is-primary">Add Category</button>
+</form>

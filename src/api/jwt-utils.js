@@ -8,6 +8,7 @@ export function createToken(user) {
   const payload = {
     id: user._id,
     email: user.email,
+    isAdmin: user.isAdmin || false,
   };
   const options = {
     algorithm: "HS256",
@@ -22,6 +23,7 @@ export function decodeToken(token) {
     const decoded = jwt.verify(token, process.env.cookie_password);
     userInfo.userId = decoded.id;
     userInfo.email = decoded.email;
+    userInfo.isAdmin = decoded.isAdmin;
   } catch (e) {
     console.log(e.message);
   }
@@ -33,5 +35,5 @@ export async function validate(decoded, request) {
   if (!user) {
     return { isValid: false };
   }
-  return { isValid: true, credentials: user };
+  return { isValid: true, credentials: user};
 }

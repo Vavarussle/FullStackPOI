@@ -4,6 +4,7 @@ import * as mongooseSeeder from "mais-mongoose-seeder";
 import { seedData } from "./seed-data.js";
 
 const seedLib = mongooseSeeder.default;
+let isConnected = false;
 
 async function seed() {
   const seeder = seedLib(Mongoose);
@@ -11,11 +12,16 @@ async function seed() {
   console.log(dbData);
 }
 
-export function connectMongo() {
-  dotenv.config();
+export async function connectMongo() {
+  if (isConnected) {
+    return;
+  }
 
+  dotenv.config();
   Mongoose.set("strictQuery", true);
-  Mongoose.connect(process.env.db);
+  await Mongoose.connect(process.env.mongoUri);
+  isConnected = true;
+
   const db = Mongoose.connection;
 
   db.on("error", (err) => {
@@ -24,10 +30,11 @@ export function connectMongo() {
 
   db.on("disconnected", () => {
     console.log("database disconnected");
+    isConnected = false;
   });
 
   db.once("open", function () {
     console.log(`database connected to ${this.name} on ${this.host}`);
-    seed();
+    // seed();
   });
 }

@@ -1,9 +1,11 @@
 <table class="table is-fullwidth">
   <thead>
     <tr>
-      <th>Track</th>
-      <th>Artist</th>
-      <th>Duration</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
+      <th>Image</th>
       <th></th>
       <th></th>
     </tr>
@@ -15,10 +17,18 @@
           {{title}}
         </td>
         <td>
-          {{artist}}
+          {{description}}
         </td>
         <td>
-          {{duration}}
+          {{latitude}}
+        </td>
+        <td>
+          {{longitude}}
+        </td>
+        <td>
+          {{#if img}}
+            <img src="{{img}}" style="max-width: 100px;">
+          {{/if}}
         </td>
         <td>
           <a href="/track/{{../playlist._id}}/edittrack/{{_id}}" class="ui icon button">

@@ -1,18 +1,13 @@
-import { EventEmitter } from "events";
 import { assert } from "chai";
 import { playtimeService } from "./playtime-service.js";
-import { assertSubset } from "../test-utils.js";
 import { maggie, maggieCredentials, mozart, testPlaylists } from "../fixtures.js";
-
-EventEmitter.setMaxListeners(25);
+import { assertSubset } from "../test-utils.js";
 
 suite("Playlist API tests", () => {
   let user = null;
 
   setup(async () => {
     playtimeService.clearAuth();
-    user = await playtimeService.createUser(maggie);
-    await playtimeService.authenticate(maggieCredentials);
     await playtimeService.deleteAllPlaylists();
     await playtimeService.deleteAllUsers();
     user = await playtimeService.createUser(maggie);
@@ -24,23 +19,32 @@ suite("Playlist API tests", () => {
 
   test("create playlist", async () => {
     const returnedPlaylist = await playtimeService.createPlaylist(mozart);
-    assert.isNotNull(returnedPlaylist);
     assertSubset(mozart, returnedPlaylist);
+    assert.isDefined(returnedPlaylist._id);
   });
 
   test("delete a playlist", async () => {
     const playlist = await playtimeService.createPlaylist(mozart);
     const response = await playtimeService.deletePlaylist(playlist._id);
-    assert.equal(response.status, 204);
-    try {
-      const returnedPlaylist = await playtimeService.getPlaylist(playlist.id);
-      assert.fail("Should not return a response");
-    } catch (error) {
-      assert(error.response.data.message === "No Playlist with this id", "Incorrect Response Message");
-    }
+    assert.equal(response, "");
+    const returnedPlaylists = await playtimeService.getAllPlaylists();
+    assert.equal(returnedPlaylists.length, 0);
   });
 
   test("create multiple playlists", async () => {
+    for (let i = 0; i < testPlaylists.length; i += 1) {
+      testPlaylists[i].userid = user._id;
+      // eslint-disable-next-line no-await-in-loop
+      await playtimeService.createPlaylist(testPlaylists[i]);
+    }
+    const returnedLists = await playtimeService.getAllPlaylists();
+    assert.equal(returnedLists.length, testPlaylists.length);
+    for (let i = 0; i < returnedLists.length; i += 1) {
+      assertSubset(testPlaylists[i], returnedLists[i]);
+    }
+  });
+
+  test("delete all playlists", async () => {
     for (let i = 0; i < testPlaylists.length; i += 1) {
       testPlaylists[i].userid = user._id;
       // eslint-disable-next-line no-await-in-loop
@@ -53,12 +57,31 @@ suite("Playlist API tests", () => {
     assert.equal(returnedLists.length, 0);
   });
 
-  test("remove non-existant playlist", async () => {
+  test("get a playlist", async () => {
+    const playlist = await playtimeService.createPlaylist(mozart);
+    const returnedPlaylist = await playtimeService.getPlaylist(playlist._id);
+    assert.deepEqual(playlist, returnedPlaylist);
+  });
+
+  test("get a playlist - bad id", async () => {
     try {
-      const response = await playtimeService.deletePlaylist("not an id");
-      assert.fail("Should not return a response");
+      await playtimeService.getPlaylist("1234");
+      assert.fail("Should not return a playlist");
     } catch (error) {
-      assert(error.response.data.message === "No Playlist with this id", "Incorrect Response Message");
+      assert(error.response.data.message === "No Category with this id");
+      assert.equal(error.response.data.statusCode, 503);
+    }
+  });
+
+  test("get a playlist - deleted playlist", async () => {
+    const playlist = await playtimeService.createPlaylist(mozart);
+    await playtimeService.deletePlaylist(playlist._id);
+    try {
+      await playtimeService.getPlaylist(playlist._id);
+      assert.fail("Should not return a playlist");
+    } catch (error) {
+      assert(error.response.data.message === "No Category with this id");
+      assert.equal(error.response.data.statusCode, 404);
     }
   });
 });

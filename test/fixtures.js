@@ -12,6 +12,19 @@ export const maggieCredentials = {
   password: "secret",
 };
 
+export const adminUser = {
+  firstName: "Admin",
+  lastName: "User",
+  email: "admin@placemark.com",
+  password: "secret",
+  isAdmin: true,
+};
+
+export const adminCredentials = {
+  email: "admin@placemark.com",
+  password: "secret",
+};
+
 export const testUsers = [
   {
     firstName: "Homer",
@@ -34,45 +47,53 @@ export const testUsers = [
 ];
 
 export const mozart = {
-  title: "Mozart Favourites",
-};
-
-export const concerto = {
-  title: "Violin Concerto No. 3",
-  artist: "Mozart",
-  duration: 15,
+  title: "Historic Buildings",
 };
 
 export const beethoven = {
-  title: "Mozart Favourites",
+  title: "Coastal Walks",
+};
+
+export const concerto = {
+  title: "Reginald's Tower",
+  description: "Historic tower in Waterford",
+  latitude: 52.2603,
+  longitude: -7.1101,
+  img: "",
 };
 
 export const testPlaylists = [
   {
-    title: "Beethoven Sonatas",
+    title: "Historic Buildings",
   },
   {
-    title: "Beethoven Concertos",
+    title: "Viewpoints",
   },
   {
-    title: "Beethoven Symphonies",
+    title: "Museums",
   },
 ];
 
 export const testTracks = [
   {
-    title: "Piano Sonata No. 3",
-    artist: "Beethoven",
-    duration: 5,
+    title: "Reginald's Tower",
+    description: "Historic tower in Waterford",
+    latitude: 52.2603,
+    longitude: -7.1101,
+    img: "",
   },
   {
-    title: "Piano Sonata No. 7",
-    artist: "Beethoven",
-    duration: 6,
+    title: "Hook Lighthouse",
+    description: "Historic lighthouse in Wexford",
+    latitude: 52.1248,
+    longitude: -6.9302,
+    img: "",
   },
   {
-    title: "Piano Sonata No. 10",
-    artist: "Beethoven",
-    duration: 4,
+    title: "Mount Congreve",
+    description: "Historic gardens in Waterford",
+    latitude: 52.2465,
+    longitude: -7.1764,
+    img: "",
   },
 ];

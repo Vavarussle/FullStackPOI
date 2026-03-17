@@ -1,32 +1,32 @@
-import { PlaylistSpec } from "../models/joi-schemas.js";
+import { CategorySpec } from "../models/joi-schemas.js";
 import { db } from "../models/db.js";
 
 export const dashboardController = {
   index: {
     handler: async function (request, h) {
       const loggedInUser = request.auth.credentials;
-      const playlists = await db.playlistStore.getUserPlaylists(loggedInUser._id);
+      const categories = await db.categoryStore.getUserCategories(loggedInUser._id);
       const viewData = {
         title: "Placemark Dashboard",
         user: loggedInUser,
-        playlists: playlists,
+        categories: categories,
       };
       return h.view("dashboard-view", viewData);
     },
   },
 
-  addPlaylist: {
+  addCategory: {
     validate: {
-      payload: PlaylistSpec,
+      payload: CategorySpec,
       options: { abortEarly: false },
       failAction: async function (request, h, error) {
         const loggedInUser = request.auth.credentials;
-        const playlists = await db.playlistStore.getUserPlaylists(loggedInUser._id);
+        const categories = await db.categoryStore.getUserCategories(loggedInUser._id);
         return h
           .view("dashboard-view", {
             title: "Add Category error",
             user: loggedInUser,
-            playlists: playlists,
+            categories: categories,
             errors: error.details,
           })
           .takeover()
@@ -35,22 +35,22 @@ export const dashboardController = {
     },
     handler: async function (request, h) {
       const loggedInUser = request.auth.credentials;
-      const newPlaylist = {
+      const newCategory = {
         userid: loggedInUser._id,
         title: request.payload.title,
       };
-      await db.playlistStore.addPlaylist(newPlaylist);
+      await db.categoryStore.addCategory(newCategory);
       return h.redirect("/dashboard");
     },
   },
 
-  deletePlaylist: {
+  deleteCategory: {
     handler: async function (request, h) {
-      const playlist = await db.playlistStore.getPlaylistById(request.params.id);
-      if (playlist && playlist.tracks) {
-        await Promise.all(playlist.tracks.map((track) => db.trackStore.deleteTrack(track._id)));
+      const category = await db.categoryStore.getCategoryById(request.params.id);
+      if (category && category.placemarks) {
+        await Promise.all(category.placemarks.map((placemark) => db.placemarkStore.deletePlacemark(placemark._id)));
       }
-      await db.playlistStore.deletePlaylistById(request.params.id);
+      await db.categoryStore.deleteCategoryById(request.params.id);
       return h.redirect("/dashboard");
     },
   },

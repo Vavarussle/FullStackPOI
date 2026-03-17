@@ -23,38 +23,38 @@ export const UserSpecPlus = UserSpec.keys({
 
 export const UserArray = Joi.array().items(UserSpecPlus).label("UserArray");
 
-export const TrackSpec = Joi.object()
+export const PlacemarkSpec = Joi.object()
   .keys({
     title: Joi.string().required().example("Reginald's Tower"),
     description: Joi.string().required().example("Historic tower in Waterford, Ireland"),
     latitude: Joi.number().required().example(52.2603),
     longitude: Joi.number().required().example(-7.1101),
     img: Joi.string().uri().optional().example("https://res.cloudinary.com/demo/image/upload/sample.jpg"),
-    playlistid: IdSpec,
+    categoryid: IdSpec,
   })
-  .label("Track");
+  .label("Placemark");
 
-export const TrackSpecPlus = TrackSpec.keys({
+export const PlacemarkSpecPlus = PlacemarkSpec.keys({
   _id: IdSpec,
   __v: Joi.number(),
-}).label("TrackPlus");
+}).label("PlacemarkPlus");
 
-export const TrackArraySpec = Joi.array().items(TrackSpecPlus).label("TrackArray");
+export const PlacemarkArraySpec = Joi.array().items(PlacemarkSpecPlus).label("PlacemarkArray");
 
-export const PlaylistSpec = Joi.object()
+export const CategorySpec = Joi.object()
   .keys({
     title: Joi.string().required().example("Historic Buildings in Ireland"),
     userid: IdSpec,
-    tracks: TrackArraySpec,
+    placemarks: PlacemarkArraySpec,
   })
-  .label("Playlist");
+  .label("Category");
 
-export const PlaylistSpecPlus = PlaylistSpec.keys({
+export const CategorySpecPlus = CategorySpec.keys({
   _id: IdSpec,
   __v: Joi.number(),
-}).label("PlaylistPlus");
+}).label("CategoryPlus");
 
-export const PlaylistArraySpec = Joi.array().items(PlaylistSpecPlus).label("PlaylistArray");
+export const CategoryArraySpec = Joi.array().items(CategorySpecPlus).label("CategoryArray");
 
 export const JwtAuth = Joi.object()
   .keys({

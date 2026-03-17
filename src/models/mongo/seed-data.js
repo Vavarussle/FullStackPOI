@@ -4,9 +4,9 @@ export const seedData = {
     homer: {
       firstName: "Homer",
       lastName: "Simpson",
-      isAdmin: true,
       email: "homer@simpson.com",
-      password: "secret"
+      password: "secret",
+      isAdmin: true,
     },
     marge: {
       firstName: "Marge",
@@ -21,32 +21,32 @@ export const seedData = {
       password: "secret"
     }
   },
-  playlists: {
-    _model: "Playlist",
+  categories: {
+    _model: "Category",
     mozart: {
       title: "Mozart Favourites",
       userid: "->users.homer"
     }
   },
-  tracks: {
-    _model : "Track",
-    track_1 : {
+  placemarks: {
+    _model : "Placemark",
+    placemark_1 : {
       title: "Violin Concerto No. 1",
       artist: "Mozart",
       duration: 15,
-      playlistid: "->playlists.mozart"
+      categoryid: "->categories.mozart"
     },
-    track_2 : {
+    placemark_2 : {
       title: "Violin Concerto No. 2",
       artist: "Mozart",
       duration: 11,
-      playlistid: "->playlists.mozart"
+      categoryid: "->categories.mozart"
     },
-    track_3 : {
+    placemark_3 : {
       title: "Violin Concerto No. 3",
       artist: "Mozart",
       duration: 23,
-      playlistid: "->playlists.mozart"
+      categoryid: "->categories.mozart"
     }
   }
 };

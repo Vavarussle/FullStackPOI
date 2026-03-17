@@ -1,0 +1,30 @@
+<table class="table is-fullwidth">
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th class="has-text-right">View</th>
+      <th class="has-text-right">Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each categories}}
+      <tr>
+        <td>
+          {{title}}
+        </td>
+        <td class="has-text-right">
+          <a href="/category/{{_id}}" class="button">
+            <span class="icon is-small">
+              <i class="fas fa-folder-open"></i>
+            </span>
+          </a>
+        </td>
+        <td class="has-text-right">
+          <a href="/dashboard/deletecategory/{{_id}}" class="ui icon button">
+            <i class="fas fa-trash"></i>
+          </a>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

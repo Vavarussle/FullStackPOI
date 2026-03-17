@@ -1,8 +1,8 @@
 import { aboutController } from "./controllers/about-controller.js";
 import { accountsController } from "./controllers/accounts-controller.js";
 import { dashboardController } from "./controllers/dashboard-controller.js";
-import { playlistController } from "./controllers/playlist-controller.js";
-import { trackController } from "./controllers/track-controller.js";
+import { categoryController } from "./controllers/category-controller.js";
+import { placemarkController } from "./controllers/placemark-controller.js";
 import { adminController } from "./controllers/admin-controller.js";
 
 export const webRoutes = [
@@ -17,22 +17,22 @@ export const webRoutes = [
   { method: "GET", path: "/about", config: aboutController.index },
 
   { method: "GET", path: "/dashboard", config: dashboardController.index },
-  { method: "POST", path: "/dashboard/addplaylist", config: dashboardController.addPlaylist },
-  { method: "GET", path: "/dashboard/deleteplaylist/{id}", config: dashboardController.deletePlaylist },
+  { method: "POST", path: "/dashboard/addcategory", config: dashboardController.addCategory },
+  { method: "GET", path: "/dashboard/deletecategory/{id}", config: dashboardController.deleteCategory },
 
   { method: "GET", path: "/admin", config: adminController.index },
   { method: "GET", path: "/admin/deleteuser/{id}", config: adminController.deleteUser },
 
-  { method: "GET", path: "/playlist/{id}", config: playlistController.index },
-  { method: "POST", path: "/playlist/{id}/addtrack", config: playlistController.addTrack },
-  { method: "GET", path: "/playlist/{id}/deletetrack/{trackid}", config: playlistController.deleteTrack },
+  { method: "GET", path: "/category/{id}", config: categoryController.index },
+  { method: "POST", path: "/category/{id}/addplacemark", config: categoryController.addPlacemark },
+  { method: "GET", path: "/category/{id}/deleteplacemark/{placemarkid}", config: categoryController.deletePlacemark },
 
-  { method: "GET", path: "/track/{id}/edittrack/{trackid}", config: trackController.index },
-  { method: "POST", path: "/track/{id}/updatetrack/{trackid}", config: trackController.update },
+  { method: "GET", path: "/placemark/{id}/editplacemark/{placemarkid}", config: placemarkController.index },
+  { method: "POST", path: "/placemark/{id}/updateplacemark/{placemarkid}", config: placemarkController.update },
 
-  { method: "POST", path: "/playlist/{id}/uploadimage", config: playlistController.uploadImage },
+  { method: "POST", path: "/category/{id}/uploadimage", config: categoryController.uploadImage },
 
-  { method: "POST", path: "/track/{id}/uploadimage", config: trackController.uploadImage },
+  { method: "POST", path: "/placemark/{id}/uploadimage", config: placemarkController.uploadImage },
 
   { method: "GET", path: "/{param*}", handler: { directory: { path: "./public" } }, options: { auth: false } },
 ];

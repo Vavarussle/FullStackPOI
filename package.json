@@ -1,7 +1,7 @@
 {
   "name": "playtime",
   "version": "0.10.2",
-  "description": "A Playlist application for the HDip in Computing, WIT",
+  "description": "A Category application for the HDip in Computing, WIT",
   "main": "index.js",
   "type": "module",
   "scripts": {

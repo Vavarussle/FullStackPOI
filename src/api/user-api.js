@@ -82,14 +82,14 @@ export const userApi = {
         return Boom.notFound("No User with this id");
       }
 
-      const playlists = await db.playlistStore.getUserPlaylists(user._id);
+      const categories = await db.categoryStore.getUserCategories(user._id);
       await Promise.all(
-        playlists.map(async (playlist) => {
-          const fullPlaylist = await db.playlistStore.getPlaylistById(playlist._id);
-          if (fullPlaylist && fullPlaylist.tracks) {
-            await Promise.all(fullPlaylist.tracks.map((track) => db.trackStore.deleteTrack(track._id)));
+        categories.map(async (category) => {
+          const fullCategory = await db.categoryStore.getCategoryById(category._id);
+          if (fullCategory && fullCategory.placemarks) {
+            await Promise.all(fullCategory.placemarks.map((placemark) => db.placemarkStore.deletePlacemark(placemark._id)));
           }
-          await db.playlistStore.deletePlaylistById(playlist._id);
+          await db.categoryStore.deleteCategoryById(category._id);
         }),
       );
 

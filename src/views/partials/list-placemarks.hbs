@@ -1,0 +1,46 @@
+<table class="table is-fullwidth">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
+      <th>Image</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each category.placemarks}}
+      <tr>
+        <td>
+          {{title}}
+        </td>
+        <td>
+          {{description}}
+        </td>
+        <td>
+          {{latitude}}
+        </td>
+        <td>
+          {{longitude}}
+        </td>
+        <td>
+          {{#if img}}
+            <img src="{{img}}" style="max-width: 100px;">
+          {{/if}}
+        </td>
+        <td>
+          <a href="/placemark/{{../category._id}}/editplacemark/{{_id}}" class="ui icon button">
+            <i class="fas fa-edit"></i>
+          </a>
+        </td>
+        <td>
+          <a href="/category/{{../category._id}}/deleteplacemark/{{_id}}" class="ui icon button">
+            <i class="fas fa-trash"></i>
+          </a>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

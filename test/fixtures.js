@@ -31,6 +31,7 @@ export const testUsers = [
     lastName: "Simpson",
     email: "homer@simpson.com",
     password: "secret",
+    isAdmin: true,
   },
   {
     firstName: "Marge",
@@ -62,7 +63,7 @@ export const concerto = {
   img: "",
 };
 
-export const testPlaylists = [
+export const testCategories = [
   {
     title: "Historic Buildings",
   },
@@ -74,7 +75,7 @@ export const testPlaylists = [
   },
 ];
 
-export const testTracks = [
+export const testPlacemarks = [
   {
     title: "Reginald's Tower",
     description: "Historic tower in Waterford",

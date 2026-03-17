@@ -1,6 +1,6 @@
 import { userApi } from "./api/user-api.js";
-import { playlistApi } from "./api/playlist-api.js";
-import { trackApi } from "./api/track-api.js";
+import { categoryApi } from "./api/category-api.js";
+import { placemarkApi } from "./api/placemark-api.js";
 
 export const apiRoutes = [
   { method: "GET", path: "/api/users", config: userApi.find },
@@ -11,15 +11,15 @@ export const apiRoutes = [
   { method: "POST", path: "/api/users/authenticate", config: userApi.authenticate },
   { method: "DELETE", path: "/api/users/{id}", config: userApi.deleteOne },
 
-  { method: "POST", path: "/api/playlists", config: playlistApi.create },
-  { method: "DELETE", path: "/api/playlists", config: playlistApi.deleteAll },
-  { method: "GET", path: "/api/playlists", config: playlistApi.find },
-  { method: "GET", path: "/api/playlists/{id}", config: playlistApi.findOne },
-  { method: "DELETE", path: "/api/playlists/{id}", config: playlistApi.deleteOne },
+  { method: "POST", path: "/api/categories", config: categoryApi.create },
+  { method: "DELETE", path: "/api/categories", config: categoryApi.deleteAll },
+  { method: "GET", path: "/api/categories", config: categoryApi.find },
+  { method: "GET", path: "/api/categories/{id}", config: categoryApi.findOne },
+  { method: "DELETE", path: "/api/categories/{id}", config: categoryApi.deleteOne },
 
-  { method: "GET", path: "/api/tracks", config: trackApi.find },
-  { method: "GET", path: "/api/tracks/{id}", config: trackApi.findOne },
-  { method: "POST", path: "/api/playlists/{id}/tracks", config: trackApi.create },
-  { method: "DELETE", path: "/api/tracks", config: trackApi.deleteAll },
-  { method: "DELETE", path: "/api/tracks/{id}", config: trackApi.deleteOne },
+  { method: "GET", path: "/api/placemarks", config: placemarkApi.find },
+  { method: "GET", path: "/api/placemarks/{id}", config: placemarkApi.findOne },
+  { method: "POST", path: "/api/categories/{id}/placemarks", config: placemarkApi.create },
+  { method: "DELETE", path: "/api/placemarks", config: placemarkApi.deleteAll },
+  { method: "DELETE", path: "/api/placemarks/{id}", config: placemarkApi.deleteOne },
 ];

@@ -10,17 +10,17 @@ export const adminController = {
       }
 
       const users = await db.userStore.getAllUsers();
-      const playlists = await db.playlistStore.getAllPlaylists();
-      const tracks = await db.trackStore.getAllTracks();
+      const categories = await db.categoryStore.getAllCategories();
+      const placemarks = await db.placemarkStore.getAllPlacemarks();
 
       const viewData = {
         title: "Admin Dashboard",
         user: loggedInUser,
         users: users,
         userCount: users.length,
-        categoryCount: playlists.length,
-        placemarkCount: tracks.length,
-        imageCount: tracks.filter((track) => track.img && track.img !== "").length,
+        categoryCount: categories.length,
+        placemarkCount: placemarks.length,
+        imageCount: placemarks.filter((placemark) => placemark.img && placemark.img !== "").length,
       };
 
       return h.view("admin-view", viewData);
@@ -41,15 +41,15 @@ export const adminController = {
         return h.redirect("/admin");
       }
 
-      const playlists = await db.playlistStore.getUserPlaylists(user._id);
+      const categories = await db.categoryStore.getUserCategories(user._id);
 
       await Promise.all(
-        playlists.map(async (playlist) => {
-          const fullPlaylist = await db.playlistStore.getPlaylistById(playlist._id);
-          if (fullPlaylist && fullPlaylist.tracks) {
-            await Promise.all(fullPlaylist.tracks.map((track) => db.trackStore.deleteTrack(track._id)));
+        categories.map(async (category) => {
+          const fullCategory = await db.categoryStore.getCategoryById(category._id);
+          if (fullCategory && fullCategory.placemarks) {
+            await Promise.all(fullCategory.placemarks.map((placemark) => db.placemarkStore.deletePlacemark(placemark._id)));
           }
-          await db.playlistStore.deletePlaylistById(playlist._id);
+          await db.categoryStore.deleteCategoryById(category._id);
         }),
       );
 

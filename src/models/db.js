@@ -1,36 +1,36 @@
 import { userMemStore } from "./mem/user-mem-store.js";
-import { playlistMemStore } from "./mem/playlist-mem-store.js";
-import { trackMemStore } from "./mem/track-mem-store.js";
+import { categoryMemStore } from "./mem/category-mem-store.js";
+import { placemarkMemStore } from "./mem/placemark-mem-store.js";
 import { userJsonStore } from "./json/user-json-store.js";
-import { playlistJsonStore } from "./json/playlist-json-store.js";
-import { trackJsonStore } from "./json/track-json-store.js";
+import { categoryJsonStore } from "./json/category-json-store.js";
+import { placemarkJsonStore } from "./json/placemark-json-store.js";
 import { userMongoStore } from "./mongo/user-mongo-store.js";
-import { playlistMongoStore } from "./mongo/playlist-mongo-store.js";
-import { trackMongoStore } from "./mongo/track-mongo-store.js";
+import { categoryMongoStore } from "./mongo/category-mongo-store.js";
+import { placemarkMongoStore } from "./mongo/placemark-mongo-store.js";
 import { connectMongo } from "./mongo/connect.js";
 
 export const db = {
   userStore: null,
-  playlistStore: null,
-  trackStore: null,
+  categoryStore: null,
+  placemarkStore: null,
 
   init(storeType) {
     switch (storeType) {
       case "json" :
         this.userStore = userJsonStore;
-        this.playlistStore = playlistJsonStore;
-        this.trackStore = trackJsonStore;
+        this.categoryStore = categoryJsonStore;
+        this.placemarkStore = placemarkJsonStore;
         break;
       case "mongo" :
         this.userStore = userMongoStore;
-        this.playlistStore = playlistMongoStore;
-        this.trackStore = trackMongoStore;
+        this.categoryStore = categoryMongoStore;
+        this.placemarkStore = placemarkMongoStore;
         connectMongo();
         break;
       default :
         this.userStore = userMemStore;
-        this.playlistStore = playlistMemStore;
-        this.trackStore = trackMemStore;
+        this.categoryStore = categoryMemStore;
+        this.placemarkStore = placemarkMemStore;
     }
   }
 };

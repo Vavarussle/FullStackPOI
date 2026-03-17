@@ -23,30 +23,40 @@ export const seedData = {
   },
   categories: {
     _model: "Category",
-    mozart: {
-      title: "Mozart Favourites",
+    dublin: {
+      title: "Dublin Places",
       userid: "->users.homer"
     }
   },
+
   placemarks: {
-    _model : "Placemark",
-    placemark_1 : {
-      title: "Violin Concerto No. 1",
-      artist: "Mozart",
-      duration: 15,
-      categoryid: "->categories.mozart"
+    _model: "Placemark",
+
+    placemark_1: {
+      title: "Phoenix Park",
+      description: "Large public park in Dublin",
+      latitude: 53.355,
+      longitude: -6.329,
+      categoryid: "->categories.dublin",
+      img: ""
     },
-    placemark_2 : {
-      title: "Violin Concerto No. 2",
-      artist: "Mozart",
-      duration: 11,
-      categoryid: "->categories.mozart"
+
+    placemark_2: {
+      title: "Guinness Storehouse",
+      description: "Famous brewery and tourist attraction",
+      latitude: 53.3419,
+      longitude: -6.2863,
+      categoryid: "->categories.dublin",
+      img: ""
     },
-    placemark_3 : {
-      title: "Violin Concerto No. 3",
-      artist: "Mozart",
-      duration: 23,
-      categoryid: "->categories.mozart"
+
+    placemark_3: {
+      title: "Trinity College",
+      description: "Historic university in Dublin",
+      latitude: 53.3438,
+      longitude: -6.2546,
+      categoryid: "->categories.dublin",
+      img: ""
     }
   }
 };

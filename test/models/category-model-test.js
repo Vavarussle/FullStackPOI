@@ -1,27 +1,33 @@
 import { assert } from "chai";
 import { db } from "../../src/models/db.js";
-import { testCategories, mozart, maggie } from "../fixtures.js";
+import { testCategories, historicBuildings, maggie } from "../fixtures.js";
 import { assertSubset } from "../test-utils.js";
 
 suite("Category Model tests", () => {
   let user = null;
+  let insertedCategories = [];
 
   setup(async () => {
     db.init("mongo");
     await db.categoryStore.deleteAllCategories();
     await db.userStore.deleteAll();
+
     user = await db.userStore.addUser(maggie);
-    mozart.userid = user._id;
+
+    historicBuildings.userid = user._id;
+    insertedCategories = [];
+
     for (let i = 0; i < testCategories.length; i += 1) {
-      testCategories[i].userid = user._id;
+      const category = { ...testCategories[i], userid: user._id };
       // eslint-disable-next-line no-await-in-loop
-      await db.categoryStore.addCategory(testCategories[i]);
+      const insertedCategory = await db.categoryStore.addCategory(category);
+      insertedCategories.push(insertedCategory);
     }
   });
 
   test("create a category", async () => {
-    const category = await db.categoryStore.addCategory(mozart);
-    assertSubset(mozart, category);
+    const category = await db.categoryStore.addCategory(historicBuildings);
+    assertSubset(historicBuildings, category);
     assert.isDefined(category._id);
   });
 
@@ -34,13 +40,13 @@ suite("Category Model tests", () => {
   });
 
   test("get a category - success", async () => {
-    const category = await db.categoryStore.addCategory(mozart);
+    const category = await db.categoryStore.addCategory(historicBuildings);
     const returnedCategory = await db.categoryStore.getCategoryById(category._id);
-    assertSubset(mozart, returnedCategory);
+    assertSubset(historicBuildings, returnedCategory);
   });
 
   test("delete One category - success", async () => {
-    const id = testCategories[0]._id;
+    const id = insertedCategories[0]._id;
     await db.categoryStore.deleteCategoryById(id);
     const returnedCategories = await db.categoryStore.getAllCategories();
     assert.equal(returnedCategories.length, testCategories.length - 1);

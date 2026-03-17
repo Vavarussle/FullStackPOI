@@ -4,12 +4,17 @@ import { testUsers, maggie, adminUser } from "../fixtures.js";
 import { assertSubset } from "../test-utils.js";
 
 suite("User Model tests", () => {
+  let insertedUsers = [];
+
   setup(async () => {
     db.init("mongo");
     await db.userStore.deleteAll();
+    insertedUsers = [];
+
     for (let i = 0; i < testUsers.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
-      await db.userStore.addUser(testUsers[i]);
+      const user = await db.userStore.addUser(testUsers[i]);
+      insertedUsers.push(user);
     }
   });
 
@@ -41,7 +46,7 @@ suite("User Model tests", () => {
   });
 
   test("delete one user - success", async () => {
-    const id = testUsers[0]._id;
+    const id = insertedUsers[0]._id;
     await db.userStore.deleteUserById(id);
     const returnedUsers = await db.userStore.getAllUsers();
     assert.equal(returnedUsers.length, testUsers.length - 1);

@@ -20,22 +20,39 @@ export const placemarkController = {
   update: {
     validate: {
       payload: PlacemarkSpec,
-      options: { abortEarly: false },
+      options: { abortEarly: false, allowUnknown: true },
       failAction: function (request, h, error) {
-        return h.view("placemark-view", { title: "Edit placemark error", errors: error.details }).takeover().code(400);
+        return h.view("placemark-view", {
+          title: "Edit placemark error",
+          user: request.auth.credentials,
+          category: category,
+          placemark: placemark,
+          errors: error.details
+        }).takeover().code(400);
       },
     },
     handler: async function (request, h) {
       const placemark = await db.placemarkStore.getPlacemarkById(request.params.placemarkid);
+      let imageUrl = placemark.img;
+      const file = request.payload.imagefile;
+      if (file && Object.keys(file).length > 0) {
+        imageUrl = await imageStore.uploadImage(file);
+      }
       const newPlacemark = {
         title: request.payload.title,
         description: request.payload.description,
         latitude: Number(request.payload.latitude),
         longitude: Number(request.payload.longitude),
-        img: placemark.img,
+        img: imageUrl,
       };
       await db.placemarkStore.updatePlacemark(placemark, newPlacemark);
       return h.redirect(`/category/${request.params.id}`);
+    },
+    payload: {
+      multipart: true,
+      output: "data",
+      maxBytes: 209715200,
+      parse: true,
     },
   },
 

@@ -1,7 +1,7 @@
 {
-  "name": "playtime",
+  "name": "placemark",
   "version": "0.10.2",
-  "description": "A Category application for the HDip in Computing, WIT",
+  "description": "A POI application for the HDip in Computing, SETU Waterford, Full Stack Development 1 module.",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -14,18 +14,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wit-hdip-comp-sci-2021/playtime.git"
+    "url": "git+https://github.com/Vavarussle/FullStackPOI.git"
   },
   "keywords": [
     "node",
     "hapi"
   ],
-  "author": "edeleastar",
+  "author": "Vavarussle",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/wit-hdip-comp-sci-2021/playtime/issues"
+    "url": "https://github.com/Vavarussle/FullStackPOI/issues"
   },
-  "homepage": "https://github.com/wit-hdip-comp-sci-2021/playtime#readme",
+  "homepage": "https://github.com/Vavarussle/FullStackPOI#readme",
   "dependencies": {
     "@hapi/boom": "^10.0.1",
     "@hapi/cookie": "^12.0.1",

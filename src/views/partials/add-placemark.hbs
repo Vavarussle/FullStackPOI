@@ -1,4 +1,4 @@
-<form class="box" action="/category/{{category._id}}/addplacemark" method="POST">
+<form class="box" action="/category/{{category._id}}/addplacemark" method="POST" enctype="multipart/form-data">
   <label>Enter Placemark Details:</label>
   <div class="field is-horizontal">
     <div class="field-body">
@@ -14,7 +14,34 @@
       <div class="field">
         <input class="input" type="text" placeholder="Enter Longitude" name="longitude">
       </div>
+      <div class="field">
+        <div class="file has-name">
+          <label class="file-label">
+            <input class="file-input" name="imagefile" type="file" accept="image/png, image/jpeg">
+            <span class="file-cta">
+              <span class="file-icon">
+                <i class="fas fa-image"></i>
+              </span>
+            </span>
+            <span class="file-name">No Image Selected</span>
+          </label>
+        </div>
+      </div>
     </div>
   </div>
   <button class="button is-primary">Add Placemark</button>
 </form>
+
+<script>
+  const fileInput = document.querySelector(".file-input");
+  const fileName = document.querySelector(".file-name");
+  if (fileInput && fileName) {
+    fileInput.onchange = () => {
+      if (fileInput.files.length > 0) {
+        fileName.textContent = fileInput.files[0].name;
+      } else {
+        fileName.textContent = "No Image Selected";
+      }
+    };
+  }
+</script>

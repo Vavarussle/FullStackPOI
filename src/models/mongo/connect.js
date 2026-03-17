@@ -19,22 +19,24 @@ export async function connectMongo() {
 
   dotenv.config();
   Mongoose.set("strictQuery", true);
-  await Mongoose.connect(process.env.mongoUri);
-  isConnected = true;
+  try {
+    await Mongoose.connect(process.env.mongoUri);
+    isConnected = true;
 
-  const db = Mongoose.connection;
+    const db = Mongoose.connection;
 
-  db.on("error", (err) => {
+    db.on("error", (err) => {
+      console.log(`database connection error: ${err}`);
+    });
+
+    db.on("disconnected", () => {
+      console.log("database disconnected");
+      isConnected = false;
+    });
+
+    console.log(`database connected to ${db.name} on ${db.host}`);
+    // await seed();
+  } catch (err) {
     console.log(`database connection error: ${err}`);
-  });
-
-  db.on("disconnected", () => {
-    console.log("database disconnected");
-    isConnected = false;
-  });
-
-  db.once("open", function () {
-    console.log(`database connected to ${this.name} on ${this.host}`);
-    // seed();
-  });
+  }
 }

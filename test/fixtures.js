@@ -47,15 +47,15 @@ export const testUsers = [
   },
 ];
 
-export const mozart = {
+export const historicBuildings = {
   title: "Historic Buildings",
 };
 
-export const beethoven = {
+export const coastalWalks = {
   title: "Coastal Walks",
 };
 
-export const concerto = {
+export const reginaldsTower = {
   title: "Reginald's Tower",
   description: "Historic tower in Waterford",
   latitude: 52.2603,

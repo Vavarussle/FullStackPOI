@@ -4,6 +4,25 @@ All notable changes to this project are documented in this file.
 
 The format is based on a simple academic release history for the final **Placemark** submission.
 
+## [0.11.0] - Public / Private POIs
+
+### Added
+- public and private placemark support using an `isPublic` field
+- public categories page showing only categories with public placemarks
+- public category detail page showing only public placemarks
+- API and model tests for public placemark behaviour
+
+### Improved
+- fixed some of the failing tests
+- stopped database reseeding on every restart unless explicitly enabled
+
+### Security
+- hashed seeded passwords to match the application password hashing approach
+
+### Notes
+- this release extends the PlacemarkHAPI Assignment 2 feature set
+
+
 ## [0.10.2] - Final Submission / Release 4
 
 ### Added

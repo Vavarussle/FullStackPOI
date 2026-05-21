@@ -1,7 +1,7 @@
 import { assert } from "chai";
 import { placemarkService } from "./placemark-service.js";
 import { assertSubset } from "../test-utils.js";
-import { maggie, maggieCredentials, historicBuildings, reginaldsTower, testPlacemarks } from "../fixtures.js";
+import { maggie, maggieCredentials, historicBuildings, reginaldsTower, testPlacemarks, publicPlacemark } from "../fixtures.js";
 
 suite("Placemark API tests", () => {
   let user = null;
@@ -9,12 +9,13 @@ suite("Placemark API tests", () => {
 
   setup(async () => {
     placemarkService.clearAuth();
-    await placemarkService.deleteAllPlacemarks();
-    await placemarkService.deleteAllCategories();
     await placemarkService.deleteAllUsers();
 
     user = await placemarkService.createUser(maggie);
     await placemarkService.authenticate(maggieCredentials);
+
+    await placemarkService.deleteAllPlacemarks();
+    await placemarkService.deleteAllCategories();
 
     historicBuildings.userid = user._id;
     category = await placemarkService.createCategory(historicBuildings);
@@ -111,6 +112,23 @@ suite("Placemark API tests", () => {
     }
   });
 
+  test("create public placemark", async () => {
+    const returnedPlacemark = await placemarkService.createPlacemark(category._id, publicPlacemark);
+    assertSubset(publicPlacemark, returnedPlacemark);
+    assert.isDefined(returnedPlacemark._id);
+    assert.equal(returnedPlacemark.isPublic, true);
+  });
+
+  test("get public placemarks only", async () => {
+    await placemarkService.createPlacemark(category._id, publicPlacemark);
+
+    const returnedPlacemarks = await placemarkService.getPublicPlacemarks();
+
+    assert.equal(returnedPlacemarks.length, 1);
+    assert.equal(returnedPlacemarks[0].title, publicPlacemark.title);
+    assert.equal(returnedPlacemarks[0].isPublic, true);
+  });
+
   test("denormalised category", async () => {
     for (let i = 0; i < testPlacemarks.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
@@ -119,4 +137,6 @@ suite("Placemark API tests", () => {
     const returnedCategory = await placemarkService.getCategory(category._id);
     assert.equal(returnedCategory.placemarks.length, testPlacemarks.length);
   });
+
+  
 });

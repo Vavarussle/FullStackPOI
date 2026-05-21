@@ -29,7 +29,9 @@ export const PlacemarkSpec = Joi.object()
     description: Joi.string().required().example("Historic tower in Waterford, Ireland"),
     latitude: Joi.number().required().example(52.2603),
     longitude: Joi.number().required().example(-7.1101),
-    img: Joi.string().uri().optional().example("https://res.cloudinary.com/demo/image/upload/sample.jpg"),
+    img: Joi.string().uri().allow("").optional().example("https://res.cloudinary.com/demo/image/upload/sample.jpg"),
+    isPublic: Joi.alternatives().try(Joi.boolean(), Joi.string().valid("on"
+    )).optional().default("false").example("false"),
     categoryid: IdSpec,
   })
   .label("Placemark");

@@ -1,6 +1,6 @@
 import { assert } from "chai";
 import { db } from "../../src/models/db.js";
-import { testPlacemarks, reginaldsTower, historicBuildings, maggie } from "../fixtures.js";
+import { testPlacemarks, reginaldsTower, historicBuildings, maggie, publicPlacemark } from "../fixtures.js";
 import { assertSubset } from "../test-utils.js";
 
 suite("Placemark Model tests", () => {
@@ -91,4 +91,27 @@ suite("Placemark Model tests", () => {
     assert.equal(returnedPlacemark.longitude, updatedPlacemark.longitude);
     assert.equal(returnedPlacemark.img, updatedPlacemark.img);
   });
+
+  test("create a public placemark", async () => {
+    await db.placemarkStore.deleteAllPlacemarks();
+
+    const placemark = await db.placemarkStore.addPlacemark(category._id, publicPlacemark);
+
+    assertSubset(publicPlacemark, placemark);
+    assert.isDefined(placemark._id);
+    assert.equal(placemark.isPublic, true);
+  });
+
+  test("get all public placemarks", async () => {
+    await db.placemarkStore.deleteAllPlacemarks();
+
+    await db.placemarkStore.addPlacemark(category._id, publicPlacemark);
+
+    const returnedPlacemarks = await db.placemarkStore.getAllPublicPlacemarks();
+
+    assert.equal(returnedPlacemarks.length, 1);
+    assert.equal(returnedPlacemarks[0].title, publicPlacemark.title);
+    assert.equal(returnedPlacemarks[0].isPublic, true);
+  });
+
 });

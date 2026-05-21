@@ -64,6 +64,16 @@
         </div>
       </div>
     </div>
+    <div class="field">
+      <label class="checkbox">
+        {{#if placemark.isPublic}}
+          <input type="checkbox" name="isPublic" checked>
+        {{else}}
+          <input type="checkbox" name="isPublic">
+        {{/if}}
+        Make this placemark public
+      </label>
+    </div>
     <div class="field has-text-centered">
       <button class="button is-primary">Update Placemark</button>
     </div>

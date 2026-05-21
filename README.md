@@ -25,7 +25,7 @@ The application allows users to:
 - access a REST API with Swagger documentation
 - authenticate API requests using JWT
 
-The project supports the staged architecture used in the module, including mem store, JSON store, and MongoDB models, with MongoDB configured for the final submission.
+The project supports the staged architecture used in the module, with MongoDB configured for the final submission.
 
 ## Tech Stack
 
@@ -76,8 +76,6 @@ The project supports the staged architecture used in the module, including mem s
 - automated API tests
 
 ### Data / Models
-- mem store
-- JSON store
 - MongoDB / Mongoose models
 
 ## Project Structure

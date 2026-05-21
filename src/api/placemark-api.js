@@ -63,6 +63,7 @@ export const placemarkApi = {
         latitude: Number(request.payload.latitude),
         longitude: Number(request.payload.longitude),
         img: request.payload.img || "",
+        isPublic: request.payload.isPublic || false,
       };
 
       const newPlacemark = await db.placemarkStore.addPlacemark(request.params.id, placemark);
@@ -97,6 +98,7 @@ export const placemarkApi = {
         latitude: Number(request.payload.latitude),
         longitude: Number(request.payload.longitude),
         img: request.payload.img || "",
+        isPublic: request.payload.isPublic || false,
       };
 
       await db.placemarkStore.updatePlacemark(placemark, updatedPlacemark);
@@ -134,6 +136,18 @@ export const placemarkApi = {
 
       await db.placemarkStore.deletePlacemark(request.params.id);
       return h.response().code(204);
+    },
+  },
+
+  findPublic: {
+    auth: false,
+    tags: ["api"],
+    description: "Get all public placemarks",
+    notes: "Returns all public placemarks",
+    response: { schema: PlacemarkArraySpec, failAction: "log" },
+    handler: async function (request, h) {
+      const placemarks = await db.placemarkStore.getAllPublicPlacemarks();
+      return placemarks;
     },
   },
 };

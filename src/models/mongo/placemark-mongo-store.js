@@ -7,8 +7,21 @@ export const placemarkMongoStore = {
     return placemarks;
   },
 
+  async getAllPublicPlacemarks() {
+    const placemarks = await Placemark.find({ isPublic: true }).lean();
+    return placemarks;
+  },
+
   async addPlacemark(categoryId, placemark) {
-    const placemarkToSave = { ...placemark, categoryid: categoryId };
+    const placemarkToSave = {
+      title: placemark.title,
+      description: placemark.description,
+      latitude: placemark.latitude,
+      longitude: placemark.longitude,
+      img: placemark.img,
+      isPublic: placemark.isPublic || false,
+      categoryid: categoryId,
+    };
     const newPlacemark = new Placemark(placemarkToSave);
     const placemarkObj = await newPlacemark.save();
     return this.getPlacemarkById(placemarkObj._id);
@@ -46,6 +59,7 @@ export const placemarkMongoStore = {
     placemarkDoc.latitude = updatedPlacemark.latitude;
     placemarkDoc.longitude = updatedPlacemark.longitude;
     placemarkDoc.img = updatedPlacemark.img;
+    placemarkDoc.isPublic = updatedPlacemark.isPublic;
     await placemarkDoc.save();
   },
 };

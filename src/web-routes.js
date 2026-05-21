@@ -4,6 +4,7 @@ import { dashboardController } from "./controllers/dashboard-controller.js";
 import { categoryController } from "./controllers/category-controller.js";
 import { placemarkController } from "./controllers/placemark-controller.js";
 import { adminController } from "./controllers/admin-controller.js";
+import { publicController } from "./controllers/public-controller.js";
 
 export const webRoutes = [
   { method: "GET", path: "/", config: accountsController.index },
@@ -13,6 +14,9 @@ export const webRoutes = [
   { method: "POST", path: "/register", config: accountsController.signup },
   { method: "POST", path: "/authenticate", config: accountsController.login },
   { method: "GET", path: "/account/delete", config: accountsController.deleteAccount },
+
+  { method: "GET", path: "/public", config: publicController.index },
+  { method: "GET", path: "/public/category/{id}", config: publicController.showCategory },
 
   { method: "GET", path: "/about", config: aboutController.index },
 

@@ -44,6 +44,7 @@ export const categoryController = {
         latitude: Number(request.payload.latitude),
         longitude: Number(request.payload.longitude),
         img: imageUrl,
+        isPublic: request.payload.isPublic === "on",
       };
       await db.placemarkStore.addPlacemark(category._id, newPlacemark);
       return h.redirect(`/category/${category._id}`);

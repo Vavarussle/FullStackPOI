@@ -60,7 +60,6 @@ The format is based on a simple academic release history for the final **Placema
 - initial Placemark project setup from the Playtime base application
 - signup, login, and logout
 - base routing, controllers, and views
-- support for mem / JSON store architecture used during development
 
 ### Notes
 - first working conversion from Playtime to Placemark

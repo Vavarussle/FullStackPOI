@@ -1,7 +1,6 @@
 import { assert } from "chai";
 import { db } from "../../src/models/db.js";
 import { testUsers, maggie, adminUser } from "../fixtures.js";
-import { assertSubset } from "../test-utils.js";
 
 suite("User Model tests", () => {
   let insertedUsers = [];
@@ -20,13 +19,19 @@ suite("User Model tests", () => {
 
   test("create a user", async () => {
     const user = await db.userStore.addUser(maggie);
-    assertSubset(maggie, user);
+    assert.equal(user.firstName, maggie.firstName);
+    assert.equal(user.lastName, maggie.lastName);
+    assert.equal(user.email, maggie.email);
     assert.isDefined(user._id);
+    assert.notEqual(user.password, maggie.password);
+    assert.include(user.password, ":");
   });
 
   test("create an admin user", async () => {
     const user = await db.userStore.addUser(adminUser);
-    assertSubset(adminUser, user);
+    assert.equal(user.firstName, adminUser.firstName);
+    assert.equal(user.lastName, adminUser.lastName);
+    assert.equal(user.email, adminUser.email);
     assert.isDefined(user._id);
     assert.equal(user.isAdmin, true);
   });
@@ -42,7 +47,10 @@ suite("User Model tests", () => {
   test("get a user - success", async () => {
     const user = await db.userStore.addUser(maggie);
     const returnedUser = await db.userStore.getUserById(user._id);
-    assertSubset(maggie, returnedUser);
+    assert.equal(returnedUser.firstName, maggie.firstName);
+    assert.equal(returnedUser.lastName, maggie.lastName);
+    assert.equal(returnedUser.email, maggie.email);
+    assert.notEqual(returnedUser.password, maggie.password);
   });
 
   test("delete one user - success", async () => {

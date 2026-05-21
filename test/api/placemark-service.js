@@ -61,8 +61,14 @@ export const placemarkService = {
   },
 
   async createPlacemark(id, placemark) {
-    const res = await axios.post(`${this.placemarkUrl}/api/categories/${id}/placemarks`, placemark, this.authHeader);
-    return res.data;
+    try {
+      const res = await axios.post(`${this.placemarkUrl}/api/categories/${id}/placemarks`, placemark, this.authHeader);
+      return res.data;
+    } catch (error) {
+      console.log("CREATE PLACEMARK STATUS:", error.response.status);
+      console.log("CREATE PLACEMARK DATA:", error.response.data);
+      throw error;
+    }
   },
 
   async getPlacemark(id) {
@@ -82,6 +88,11 @@ export const placemarkService = {
 
   async deleteAllPlacemarks() {
     const res = await axios.delete(`${this.placemarkUrl}/api/placemarks`, this.authHeader);
+    return res.data;
+  },
+
+  async getPublicPlacemarks() {
+    const res = await axios.get(`${this.placemarkUrl}/api/placemarks/public`);
     return res.data;
   },
 

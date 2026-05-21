@@ -22,6 +22,10 @@ export const placemarkController = {
       payload: PlacemarkSpec,
       options: { abortEarly: false, allowUnknown: true },
       failAction: function (request, h, error) {
+
+        const category = db.categoryStore.getCategoryById(request.params.id);
+        const placemark = db.placemarkStore.getPlacemarkById(request.params.placemarkid);
+
         return h.view("placemark-view", {
           title: "Edit placemark error",
           user: request.auth.credentials,
@@ -44,6 +48,7 @@ export const placemarkController = {
         latitude: Number(request.payload.latitude),
         longitude: Number(request.payload.longitude),
         img: imageUrl,
+        isPublic: request.payload.isPublic === "on",
       };
       await db.placemarkStore.updatePlacemark(placemark, newPlacemark);
       return h.redirect(`/category/${request.params.id}`);

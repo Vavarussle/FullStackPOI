@@ -1,4 +1,5 @@
 import { User } from "./user.js";
+import { hashPassword } from "../../utils/password-utils.js";
 
 export const userMongoStore = {
   async getAllUsers() {
@@ -15,7 +16,15 @@ export const userMongoStore = {
   },
 
   async addUser(user) {
-    const newUser = new User(user);
+    const newUserData = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      password: hashPassword(user.password),
+      isAdmin: user.isAdmin,
+    };
+    
+    const newUser = new User(newUserData);
     const userObj = await newUser.save();
     return this.getUserById(userObj._id);
   },

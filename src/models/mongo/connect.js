@@ -35,7 +35,10 @@ export async function connectMongo() {
     });
 
     console.log(`database connected to ${db.name} on ${db.host}`);
-    await seed();
+
+    if (process.env.seedDatabase === "true") {
+      await seed();
+    }
   } catch (err) {
     console.log(`database connection error: ${err}`);
   }

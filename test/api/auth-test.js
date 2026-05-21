@@ -22,18 +22,20 @@ suite("Authentication API tests", () => {
   test("verify Token", async () => {
     await placemarkService.createUser(maggie);
     const response = await placemarkService.authenticate(maggieCredentials);
-
     const userInfo = decodeToken(response.token);
     assert.equal(userInfo.email, maggie.email);
-    assert.isDefined(userInfo.useriId);
+    assert.isDefined(userInfo.userId);
   });
 
   test("check Unauthorized", async () => {
+    await placemarkService.deleteAllUsers();
+    const createdUser = await placemarkService.createUser(maggie);
     placemarkService.clearAuth();
     try {
-      await placemarkService.deleteAllUsers();
+      await placemarkService.deleteUser(createdUser._id);
       assert.fail("Route not protected");
     } catch (error) {
+      assert.isDefined(error.response);
       assert.equal(error.response.data.statusCode, 401);
     }
   });

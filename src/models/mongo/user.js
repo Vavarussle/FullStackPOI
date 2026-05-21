@@ -1,5 +1,6 @@
 import Mongoose from "mongoose";
 import Boom from "@hapi/boom";
+import { comparePasswords } from "../../utils/password-utils.js";
 
 const { Schema } = Mongoose;
 
@@ -16,7 +17,7 @@ userSchema.statics.findByEmail = function (email) {
 };
 
 userSchema.methods.comparePassword = function (candidatePassword) {
-  const isMatch = this.password === candidatePassword;
+  const isMatch = comparePasswords(candidatePassword, this.password);
   if (!isMatch) {
     throw Boom.unauthorized("Password mismatch");
   }

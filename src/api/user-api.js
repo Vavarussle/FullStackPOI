@@ -2,6 +2,7 @@ import Boom from "@hapi/boom";
 import { db } from "../models/db.js";
 import { createToken } from "./jwt-utils.js";
 import { UserSpec, UserSpecPlus, UserArray, UserCredentialsSpec } from "../models/joi-schemas.js";
+import { comparePasswords } from "../utils/password-utils.js";
 
 export const userApi = {
   find: {
@@ -108,7 +109,12 @@ export const userApi = {
       const { email, password } = request.payload;
       const user = await db.userStore.getUserByEmail(email);
 
-      if (!user || user.password !== password) {
+      if (!user) {
+        return Boom.unauthorized("Invalid email or password");
+      }
+
+      const passwordsMatch = comparePasswords(password, user.password);
+      if (!passwordsMatch) {
         return Boom.unauthorized("Invalid email or password");
       }
 

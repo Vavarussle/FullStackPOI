@@ -1,7 +1,6 @@
 import { assert } from "chai";
 import { placemarkService } from "./placemark-service.js";
 import { maggie, adminUser, adminCredentials, testUsers } from "../fixtures.js";
-import { assertSubset } from "../test-utils.js";
 
 suite("User API tests", () => {
   setup(async () => {
@@ -14,17 +13,25 @@ suite("User API tests", () => {
 
   test("create user", async () => {
     const returnedUser = await placemarkService.createUser(maggie);
-    assertSubset(maggie, returnedUser);
+    assert.equal(returnedUser.firstName, maggie.firstName);
+    assert.equal(returnedUser.lastName, maggie.lastName);
+    assert.equal(returnedUser.email, maggie.email);
     assert.isDefined(returnedUser._id);
+    assert.notEqual(returnedUser.password, maggie.password);
   });
 
   test("create user with admin flag", async () => {
     const returnedUser = await placemarkService.createUser(adminUser);
-    assertSubset(adminUser, returnedUser);
+    assert.equal(returnedUser.firstName, adminUser.firstName);
+    assert.equal(returnedUser.lastName, adminUser.lastName);
+    assert.equal(returnedUser.email, adminUser.email);
+    assert.equal(returnedUser.isAdmin, true);
     assert.isDefined(returnedUser._id);
+    assert.notEqual(returnedUser.password, adminUser.password);
   });
 
   test("delete all users", async () => {
+    await placemarkService.deleteAllUsers();
     for (let i = 0; i < testUsers.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
       await placemarkService.createUser(testUsers[i]);

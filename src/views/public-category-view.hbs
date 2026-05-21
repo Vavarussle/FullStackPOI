@@ -1,0 +1,40 @@
+{{#if isLoggedIn}}
+  {{> menu}}
+{{else}}
+  {{> welcome-menu}}
+{{/if}}
+
+<section class="section">
+  <div class="title">{{category.title}}</div>
+  <a class="button mb-4 is-danger" href="/public">Back to Public Categories</a>
+
+  {{#if category.placemarks.length}}
+    <div class="columns is-multiline">
+      {{#each category.placemarks}}
+        <div class="column is-one-third has-text-centered">
+          <div class="box">
+            <div class="title is-4">{{title}}</div>
+
+            {{#if img}}
+              <div class="mb-4">
+                <img
+                  src="{{img}}"
+                  alt="{{title}}"
+                  style="width: 70%; height: 70%;">
+              </div>
+            {{/if}}
+
+            <p><strong>Description:</strong> {{description}}</p>
+            <p><strong>Latitude:</strong> {{latitude}}</p>
+            <p><strong>Longitude:</strong> {{longitude}}</p>
+            <span class="tag is-success mt-3">Public</span>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  {{else}}
+    <div class="box">
+      <p>No public placemarks in this category.</p>
+    </div>
+  {{/if}}
+</section>

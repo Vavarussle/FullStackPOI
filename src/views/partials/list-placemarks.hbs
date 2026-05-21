@@ -5,6 +5,7 @@
       <th>Description</th>
       <th>Latitude</th>
       <th>Longitude</th>
+      <th>Visibility</th>
       <th>Image</th>
       <th></th>
       <th></th>
@@ -17,6 +18,13 @@
         <td>{{description}}</td>
         <td>{{latitude}}</td>
         <td>{{longitude}}</td>
+        <td>
+          {{#if isPublic}}
+          <span class="tag is-success">Public</span>
+            {{else}}
+          <span class="tag is-warning">Private</span>
+            {{/if}}
+        </td>
         <td>
           {{#if img}}
             <img src="{{img}}" style="max-width: 100px;">

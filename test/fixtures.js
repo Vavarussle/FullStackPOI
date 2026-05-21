@@ -5,6 +5,7 @@ export const maggie = {
   lastName: "Simpson",
   email: "maggie@simpson.com",
   password: "secret",
+  isAdmin: false,
 };
 
 export const maggieCredentials = {
@@ -38,12 +39,14 @@ export const testUsers = [
     lastName: "Simpson",
     email: "marge@simpson.com",
     password: "secret",
+    isAdmin: false,
   },
   {
     firstName: "Bart",
     lastName: "Simpson",
     email: "bart@simpson.com",
     password: "secret",
+    isAdmin: false,
   },
 ];
 
@@ -61,6 +64,7 @@ export const reginaldsTower = {
   latitude: 52.2603,
   longitude: -7.1101,
   img: "",
+  isPublic: false,
 };
 
 export const testCategories = [
@@ -82,6 +86,7 @@ export const testPlacemarks = [
     latitude: 52.2603,
     longitude: -7.1101,
     img: "",
+    isPublic: false,
   },
   {
     title: "Hook Lighthouse",
@@ -89,6 +94,7 @@ export const testPlacemarks = [
     latitude: 52.1248,
     longitude: -6.9302,
     img: "",
+    isPublic: false,
   },
   {
     title: "Mount Congreve",
@@ -96,5 +102,15 @@ export const testPlacemarks = [
     latitude: 52.2465,
     longitude: -7.1764,
     img: "",
+    isPublic: false,
   },
 ];
+
+export const publicPlacemark = {
+  title: "Monasterboice High Crosses",
+  description: "One of the most impressive Celtic Crosses in Ireland",
+  latitude: 53.7776,
+  longitude: -6.41759,
+  img: "",
+  isPublic: true,
+};

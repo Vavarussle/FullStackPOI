@@ -58,6 +58,9 @@ The project supports the staged architecture used in the module, with MongoDB co
 - category assignment
 - image upload support
 - placemark lists associated with users
+- public and private placemarks
+- public browsing of categories that contain public placemarks
+- public category pages showing only public placemarks
 
 ### Categories
 - create and manage categories
@@ -84,7 +87,7 @@ The project supports the staged architecture used in the module, with MongoDB co
 src/
   api/            API routes and controllers
   controllers/    Web controllers
-  models/         Mem, JSON, and Mongo stores
+  models/         Mongo models and store layer
   views/          Handlebars templates
 test/
   api/            API tests
@@ -116,6 +119,7 @@ Required environment variables include:
 cookie_name=your_cookie_name
 cookie_password=your_cookie_password
 db=mongo
+seedDatabase=false
 mongoUri=your_mongodb_connection_string
 cloudinary_name=your_cloudinary_cloud_name
 cloudinary_key=your_cloudinary_api_key
@@ -197,6 +201,20 @@ This submission includes work aligned with the Placemark assignment progression:
 - Level 2: cookie auth, coordinates, account deletion
 - Level 3: categories, MongoDB models, Swagger API
 - Level 4: admin dashboard, images, JWT authentication, tests
+
+## Additional Academic Submission Notes
+
+This submission currently includes work aligned with the PlacemarkHAPI progression:
+
+- private POIs
+- public POIs
+- password hashing and salting
+- JWT-secured API
+- Swagger documentation
+- MongoDB persistence
+- admin dashboard
+- image upload
+- API and model test coverage
 
 ## License
 

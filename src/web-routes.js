@@ -17,6 +17,9 @@ export const webRoutes = [
 
   { method: "GET", path: "/public", config: publicController.index },
   { method: "GET", path: "/public/category/{id}", config: publicController.showCategory },
+  { method: "GET", path: "/public/placemark/{id}", config: publicController.showPlacemark },
+  { method: "POST", path: "/public/placemark/{id}/addreview", config: publicController.addReview },
+  { method: "GET", path: "/public/placemark/{id}/deletereview/{reviewid}", config: publicController.deleteReview },
 
   { method: "GET", path: "/about", config: aboutController.index },
 
@@ -35,6 +38,10 @@ export const webRoutes = [
   { method: "POST", path: "/placemark/{id}/updateplacemark/{placemarkid}", config: placemarkController.update },
 
   { method: "POST", path: "/placemark/{id}/uploadimage", config: placemarkController.uploadImage },
+
+  { method: "POST", path: "/placemark/{id}/addreview/{placemarkid}", config: placemarkController.addReview },
+
+  { method: "GET", path: "/placemark/{id}/deletereview/{placemarkid}/{reviewid}", config: placemarkController.deleteReview },
 
   { method: "GET", path: "/{param*}", handler: { directory: { path: "./public" } }, options: { auth: false } },
 ];

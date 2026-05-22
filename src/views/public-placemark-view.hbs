@@ -1,0 +1,61 @@
+{{#if isLoggedIn}}
+  {{> menu}}
+{{else}}
+  {{> welcome-menu}}
+{{/if}}
+
+<section class="section">
+  <div class="title">{{placemark.title}}</div>
+  <div class="subtitle">
+    <a href="/public/category/{{category._id}}">{{category.title}}</a>
+  </div>
+  <a class="button is-danger mb-4" href="/public/category/{{category._id}}">Back to {{category.title}} Placemarks</a>
+
+  <div class="box">
+    {{#if placemark.img}}
+      <div class="has-text-centered mb-4">
+        <img src="{{placemark.img}}" alt="{{placemark.title}}" style="width: 60%; height: 60%;">
+      </div>
+    {{/if}}
+
+    <p><strong>Description:</strong> {{placemark.description}}</p>
+    <p><strong>Latitude:</strong> {{placemark.latitude}}</p>
+    <p><strong>Longitude:</strong> {{placemark.longitude}}</p>
+    <span class="tag is-success mt-3">Public</span>
+  </div>
+
+  <div class="title is-4">Reviews</div>
+
+  {{#if isLoggedIn}}
+    <form class="box" action="/public/placemark/{{placemark._id}}/addreview" method="POST">
+      <div class="field">
+        <label class="label">Add Review</label>
+        <div class="control">
+          <textarea class="textarea" name="comment" placeholder="Write your review here"></textarea>
+        </div>
+      </div>
+      <div class="field">
+        <button class="button is-link">Add Review</button>
+      </div>
+    </form>
+  {{/if}}
+
+  {{#if reviews.length}}
+    {{#each reviews}}
+      <div class="box">
+        <p><strong>{{reviewerName}}</strong></p>
+        <p>{{comment}}</p>
+
+        {{#if canDelete}}
+          <a class="button is-small is-danger mt-3" href="/public/placemark/{{../placemark._id}}/deletereview/{{_id}}">
+            Delete Review
+          </a>
+        {{/if}}
+      </div>
+    {{/each}}
+  {{else}}
+    <div class="box">
+      <p>No reviews yet.</p>
+    </div>
+  {{/if}}
+</section>

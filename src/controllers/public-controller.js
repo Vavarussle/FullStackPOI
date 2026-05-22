@@ -1,4 +1,5 @@
 import { db } from "../models/db.js";
+import { ReviewSpec } from "../models/joi-schemas.js";
 
 export const publicController = {
   index: {
@@ -36,4 +37,96 @@ export const publicController = {
       return h.view("public-category-view", viewData);
     },
   },
+
+  showPlacemark: {
+    auth: { mode: "try" },
+    handler: async function (request, h) {
+      const placemark = await db.placemarkStore.getPlacemarkById(request.params.id);
+      const loggedInUser = request.auth.credentials;
+
+      if (!placemark || !placemark.isPublic) {
+        return h.redirect("/public");
+      }
+
+      const category = await db.categoryStore.getCategoryById(placemark.categoryid);
+      const reviews = await db.reviewStore.getReviewsByPlacemarkId(placemark._id);
+
+      for (let i = 0; i < reviews.length; i += 1) {
+        reviews[i].canDelete = false;
+        if (loggedInUser) {
+          if (loggedInUser.isAdmin || `${reviews[i].userid}` === `${loggedInUser._id}`) {
+            reviews[i].canDelete = true;
+          }
+        }
+      }
+
+      const viewData = {
+        title: "Public Placemark",
+        placemark: placemark,
+        category: category,
+        reviews: reviews,
+        isLoggedIn: loggedInUser !== null && loggedInUser !== undefined,
+        user: loggedInUser,
+      };
+      return h.view("public-placemark-view", viewData);
+    },
+  },
+
+  addReview: {
+    validate: {
+      payload: ReviewSpec,
+      options: { abortEarly: false, allowUnknown: true },
+      failAction: async function (request, h, error) {
+        const placemark = await db.placemarkStore.getPlacemarkById(request.params.id);
+        const category = await db.categoryStore.getCategoryById(placemark.categoryid);
+        const reviews = await db.reviewStore.getReviewsByPlacemarkId(request.params.id);
+
+        return h.view("public-placemark-view", {
+          title: "Public Placemark",
+          placemark: placemark,
+          category: category,
+          reviews: reviews,
+          isLoggedIn: true,
+          user: request.auth.credentials,
+          errors: error.details,
+        }).takeover().code(400);
+      },
+    },
+    handler: async function (request, h) {
+      const loggedInUser = request.auth.credentials;
+      const placemark = await db.placemarkStore.getPlacemarkById(request.params.id);
+
+      if (!placemark || !placemark.isPublic) {
+        return h.redirect("/public");
+      }
+
+      const newReview = {
+        placemarkid: request.params.id,
+        userid: loggedInUser._id,
+        reviewerName: `${loggedInUser.firstName} ${loggedInUser.lastName}`,
+        comment: request.payload.comment,
+      };
+
+      await db.reviewStore.addReview(newReview);
+      return h.redirect(`/public/placemark/${request.params.id}`);
+    },
+  },
+
+  deleteReview: {
+    handler: async function (request, h) {
+      const loggedInUser = request.auth.credentials;
+      const review = await db.reviewStore.getReviewById(request.params.reviewid);
+      const placemark = await db.placemarkStore.getPlacemarkById(request.params.id);
+
+      if (review && placemark && placemark.isPublic) {
+        const isOwner = `${review.userid}` === `${loggedInUser._id}`;
+        if (isOwner || loggedInUser.isAdmin) {
+          await db.reviewStore.deleteReviewById(request.params.reviewid);
+        }
+      }
+
+      return h.redirect(`/public/placemark/${request.params.id}`);
+    },
+  },
+
 };

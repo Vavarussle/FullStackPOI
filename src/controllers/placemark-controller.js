@@ -1,4 +1,4 @@
-import { PlacemarkSpec } from "../models/joi-schemas.js";
+import { PlacemarkSpec , ReviewSpec } from "../models/joi-schemas.js";
 import { db } from "../models/db.js";
 import { imageStore } from "../models/image-store.js";
 
@@ -7,11 +7,21 @@ export const placemarkController = {
     handler: async function (request, h) {
       const category = await db.categoryStore.getCategoryById(request.params.id);
       const placemark = await db.placemarkStore.getPlacemarkById(request.params.placemarkid);
+      const reviews = await db.reviewStore.getReviewsByPlacemarkId(request.params.placemarkid);
+      const loggedInUser = request.auth.credentials;
+
+      for (let i = 0; i < reviews.length; i += 1) {
+        reviews[i].canDelete = false;
+        if (loggedInUser.isAdmin || `${reviews[i].userid}` === `${loggedInUser._id}`) {
+          reviews[i].canDelete = true;
+        }
+      }
       const viewData = {
         title: "Edit Placemark",
-        user: request.auth.credentials,
+        user: loggedInUser,
         category: category,
         placemark: placemark,
+        reviews: reviews,
       };
       return h.view("placemark-view", viewData);
     },
@@ -21,16 +31,18 @@ export const placemarkController = {
     validate: {
       payload: PlacemarkSpec,
       options: { abortEarly: false, allowUnknown: true },
-      failAction: function (request, h, error) {
+      failAction: async function (request, h, error) {
 
-        const category = db.categoryStore.getCategoryById(request.params.id);
-        const placemark = db.placemarkStore.getPlacemarkById(request.params.placemarkid);
+        const category = await db.categoryStore.getCategoryById(request.params.id);
+        const placemark = await db.placemarkStore.getPlacemarkById(request.params.placemarkid);
+        const reviews = await db.reviewStore.getReviewsByPlacemarkId(request.params.placemarkid);
 
         return h.view("placemark-view", {
           title: "Edit placemark error",
           user: request.auth.credentials,
           category: category,
           placemark: placemark,
+          reviews: reviews,
           errors: error.details
         }).takeover().code(400);
       },
@@ -86,4 +98,55 @@ export const placemarkController = {
       parse: true,
     },
   },
+
+  addReview: {
+    validate: {
+      payload: ReviewSpec,
+      options: { abortEarly: false, allowUnknown: true },
+      failAction: async function (request, h, error) {
+        const category = await db.categoryStore.getCategoryById(request.params.id);
+        const placemark = await db.placemarkStore.getPlacemarkById(request.params.placemarkid);
+        const reviews = await db.reviewStore.getReviewsByPlacemarkId(request.params.placemarkid);
+
+        return h.view("placemark-view", {
+          title: "Review error",
+          user: request.auth.credentials,
+          category: category,
+          placemark: placemark,
+          reviews: reviews,
+          errors: error.details,
+        }).takeover().code(400);
+      },
+    },
+    handler: async function (request, h) {
+      const loggedInUser = request.auth.credentials;
+
+      const newReview = {
+        placemarkid: request.params.placemarkid,
+        userid: loggedInUser._id,
+        reviewerName: `${loggedInUser.firstName} ${loggedInUser.lastName}`,
+        comment: request.payload.comment,
+      };
+
+      await db.reviewStore.addReview(newReview);
+      return h.redirect(`/placemark/${request.params.id}/editplacemark/${request.params.placemarkid}`);
+    },
+  },
+
+  deleteReview: {
+    handler: async function (request, h) {
+      const loggedInUser = request.auth.credentials;
+      const review = await db.reviewStore.getReviewById(request.params.reviewid);
+
+      if (review) {
+        const isOwner = `${review.userid}` === `${loggedInUser._id}`;
+        if (isOwner || loggedInUser.isAdmin) {
+          await db.reviewStore.deleteReviewById(request.params.reviewid);
+        }
+      }
+
+      return h.redirect(`/placemark/${request.params.id}/editplacemark/${request.params.placemarkid}`);
+    },
+  },
+
 };

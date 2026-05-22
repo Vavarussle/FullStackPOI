@@ -1,7 +1,7 @@
 import { assert } from "chai";
 import { placemarkService } from "./placemark-service.js";
 import { assertSubset } from "../test-utils.js";
-import { maggie, maggieCredentials, historicBuildings, reginaldsTower, testPlacemarks, publicPlacemark } from "../fixtures.js";
+import { maggie, maggieCredentials, historicBuildings, reginaldsTower, testPlacemarks, publicPlacemark, placemarkReview } from "../fixtures.js";
 
 suite("Placemark API tests", () => {
   let user = null;
@@ -127,6 +127,27 @@ suite("Placemark API tests", () => {
     assert.equal(returnedPlacemarks.length, 1);
     assert.equal(returnedPlacemarks[0].title, publicPlacemark.title);
     assert.equal(returnedPlacemarks[0].isPublic, true);
+  });
+
+  test("create review for placemark", async () => {
+    const placemark = await placemarkService.createPlacemark(category._id, reginaldsTower);
+
+    const returnedReview = await placemarkService.createReview(placemark._id, placemarkReview);
+
+    assert.equal(returnedReview.comment, placemarkReview.comment);
+    assert.equal(returnedReview.placemarkid, placemark._id);
+    assert.isDefined(returnedReview._id);
+  });
+
+  test("delete review for placemark", async () => {
+    const placemark = await placemarkService.createPlacemark(category._id, reginaldsTower);
+    const review = await placemarkService.createReview(placemark._id, placemarkReview);
+
+    const response = await placemarkService.deleteReview(review._id);
+    assert.equal(response, "");
+
+    const returnedReviews = await placemarkService.getPlacemarkReviews(placemark._id);
+    assert.equal(returnedReviews.length, 0);
   });
 
   test("denormalised category", async () => {

@@ -4,6 +4,22 @@ All notable changes to this project are documented in this file.
 
 The format is based on a simple academic release history for the final **Placemark** submission.
 
+
+## [0.12.0] - Public / Private POIs and Reviews
+
+### Added
+
+- public placemark detail pages
+- review support for placemarks
+- public display of placemark reviews
+- review API endpoints
+- API and model tests for reviews
+
+
+
+### Notes
+- this release completes the reviews part for the PlacemarkHAPI Assignment 2 path
+
 ## [0.11.0] - Public / Private POIs
 
 ### Added

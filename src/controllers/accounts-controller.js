@@ -84,7 +84,7 @@ export const accountsController = {
           await db.categoryStore.deleteCategoryById(category._id);
         }),
       );
-
+      await db.reviewStore.deleteReviewsByUserId(loggedInUser._id);
       await db.userStore.deleteUserById(loggedInUser._id);
       request.cookieAuth.clear();
       return h.redirect("/");

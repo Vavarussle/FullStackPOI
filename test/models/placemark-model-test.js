@@ -1,6 +1,6 @@
 import { assert } from "chai";
 import { db } from "../../src/models/db.js";
-import { testPlacemarks, reginaldsTower, historicBuildings, maggie, publicPlacemark } from "../fixtures.js";
+import { testPlacemarks, reginaldsTower, historicBuildings, maggie, publicPlacemark, placemarkReview } from "../fixtures.js";
 import { assertSubset } from "../test-utils.js";
 
 suite("Placemark Model tests", () => {
@@ -112,6 +112,37 @@ suite("Placemark Model tests", () => {
     assert.equal(returnedPlacemarks.length, 1);
     assert.equal(returnedPlacemarks[0].title, publicPlacemark.title);
     assert.equal(returnedPlacemarks[0].isPublic, true);
+  });
+
+  test("create a review for a placemark", async () => {
+    const placemark = await db.placemarkStore.addPlacemark(category._id, reginaldsTower);
+
+    const review = await db.reviewStore.addReview({
+      placemarkid: placemark._id,
+      userid: user._id,
+      reviewerName: `${user.firstName} ${user.lastName}`,
+      comment: placemarkReview.comment,
+    });
+
+    assert.isDefined(review._id);
+    assert.equal(review.comment, placemarkReview.comment);
+    assert.equal(`${review.placemarkid}`, `${placemark._id}`);
+  });
+
+  test("delete a review for a placemark", async () => {
+    const placemark = await db.placemarkStore.addPlacemark(category._id, reginaldsTower);
+
+    const review = await db.reviewStore.addReview({
+      placemarkid: placemark._id,
+      userid: user._id,
+      reviewerName: `${user.firstName} ${user.lastName}`,
+      comment: placemarkReview.comment,
+    });
+
+    await db.reviewStore.deleteReviewById(review._id);
+
+    const returnedReviews = await db.reviewStore.getReviewsByPlacemarkId(placemark._id);
+    assert.equal(returnedReviews.length, 0);
   });
 
 });

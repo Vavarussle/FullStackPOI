@@ -1,6 +1,7 @@
 import { userApi } from "./api/user-api.js";
 import { categoryApi } from "./api/category-api.js";
 import { placemarkApi } from "./api/placemark-api.js";
+import { reviewApi } from "./api/review-api.js";
 
 export const apiRoutes = [
   { method: "GET", path: "/api/users", config: userApi.find },
@@ -22,6 +23,11 @@ export const apiRoutes = [
   { method: "GET", path: "/api/placemarks/{id}", config: placemarkApi.findOne },
   { method: "PUT", path: "/api/placemarks/{id}", config: placemarkApi.update },
   { method: "POST", path: "/api/categories/{id}/placemarks", config: placemarkApi.create },
+  
   { method: "DELETE", path: "/api/placemarks", config: placemarkApi.deleteAll },
   { method: "DELETE", path: "/api/placemarks/{id}", config: placemarkApi.deleteOne },
+
+  { method: "GET", path: "/api/placemarks/{id}/reviews", config: reviewApi.findByPlacemark },
+  { method: "POST", path: "/api/placemarks/{id}/reviews", config: reviewApi.create },
+  { method: "DELETE", path: "/api/reviews/{id}", config: reviewApi.deleteOne },
 ];

@@ -114,3 +114,7 @@ export const publicPlacemark = {
   img: "",
   isPublic: true,
 };
+
+export const placemarkReview = {
+  comment: "Great place to visit",
+};

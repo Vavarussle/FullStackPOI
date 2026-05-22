@@ -58,6 +58,24 @@ export const CategorySpecPlus = CategorySpec.keys({
 
 export const CategoryArraySpec = Joi.array().items(CategorySpecPlus).label("CategoryArray");
 
+export const ReviewSpec = Joi.object()
+  .keys({
+    comment: Joi.string().required().min(3).max(500).example("Great place to visit"),
+  })
+  .label("Review");
+
+
+export const ReviewSpecPlus = ReviewSpec.keys({
+  _id: IdSpec,
+  placemarkid: IdSpec,
+  userid: IdSpec,
+  reviewerName: Joi.string(),
+  createdAt: Joi.date(),
+  __v: Joi.number(),
+}).label("ReviewPlus");
+
+export const ReviewArraySpec = Joi.array().items(ReviewSpecPlus).label("ReviewArray");
+
 export const JwtAuth = Joi.object()
   .keys({
     success: Joi.boolean().example("true").required(),

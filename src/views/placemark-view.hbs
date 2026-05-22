@@ -64,7 +64,7 @@
         </div>
       </div>
     </div>
-    <div class="field">
+    <div class="field has-text-centered">
       <label class="checkbox">
         {{#if placemark.isPublic}}
           <input type="checkbox" name="isPublic" checked>
@@ -78,6 +78,40 @@
       <button class="button is-primary">Update Placemark</button>
     </div>
   </form>
+
+  <div class="title is-4 mt-5">Reviews</div>
+
+  <form class="box" action="/placemark/{{category._id}}/addreview/{{placemark._id}}" method="POST">
+    <div class="field">
+      <label class="label">Add Review</label>
+      <div class="control">
+        <textarea class="textarea" name="comment" placeholder="Write your review here"></textarea>
+      </div>
+    </div>
+    <div class="field">
+      <button class="button is-link">Add Review</button>
+    </div>
+  </form>
+
+  {{#if reviews.length}}
+    {{#each reviews}}
+      <div class="box">
+        <p><strong>{{reviewerName}}</strong></p>
+        <p>{{comment}}</p>
+
+        {{#if canDelete}}
+          <a class="button is-small is-danger mt-3" href="/placemark/{{../category._id}}/deletereview/{{../placemark._id}}/{{_id}}">
+            Delete Review
+          </a>
+        {{/if}}
+      </div>
+    {{/each}}
+  {{else}}
+    <div class="box">
+      <p>No reviews yet.</p>
+    </div>
+  {{/if}}
+
 </section>
 
 <script>

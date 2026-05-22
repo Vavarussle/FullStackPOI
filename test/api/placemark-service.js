@@ -96,6 +96,21 @@ export const placemarkService = {
     return res.data;
   },
 
+  async createReview(id, review) {
+    const res = await axios.post(`${this.placemarkUrl}/api/placemarks/${id}/reviews`, review, this.authHeader);
+    return res.data;
+  },
+
+  async getPlacemarkReviews(id) {
+    const res = await axios.get(`${this.placemarkUrl}/api/placemarks/${id}/reviews`);
+    return res.data;
+  },
+
+  async deleteReview(id) {
+    const res = await axios.delete(`${this.placemarkUrl}/api/reviews/${id}`, this.authHeader);
+    return res.data;
+  },
+
   async authenticate(user) {
     const response = await axios.post(`${this.placemarkUrl}/api/users/authenticate`, user);
     axios.defaults.headers.common.Authorization = `Bearer ${response.data.token}`;

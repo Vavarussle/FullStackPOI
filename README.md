@@ -24,6 +24,10 @@ The application allows users to:
 - use an admin view to manage users and see summary information
 - access a REST API with Swagger documentation
 - authenticate API requests using JWT
+- mark placemarks as public or private
+- browse public categories and public placemarks without logging in
+- add and delete placemark reviews
+- view reviews on public placemark pages
 
 The project supports the staged architecture used in the module, with MongoDB configured for the final submission.
 
@@ -73,7 +77,7 @@ The project supports the staged architecture used in the module, with MongoDB co
 - user management / user deletion
 
 ### API
-- REST endpoints for users, categories, and placemarks
+- REST endpoints for users, categories, placemarks and reviews
 - JWT secured routes
 - Swagger documentation
 - automated API tests
@@ -208,13 +212,9 @@ This submission currently includes work aligned with the PlacemarkHAPI progressi
 
 - private POIs
 - public POIs
+- reviews
 - password hashing and salting
-- JWT-secured API
-- Swagger documentation
 - MongoDB persistence
-- admin dashboard
-- image upload
-- API and model test coverage
 
 ## License
 

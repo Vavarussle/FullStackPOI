@@ -2,6 +2,18 @@ import { PlacemarkSpec , ReviewSpec } from "../models/joi-schemas.js";
 import { db } from "../models/db.js";
 import { imageStore } from "../models/image-store.js";
 
+
+function calculateAverageRating(reviews) {
+  if (!reviews || reviews.length === 0) {
+    return 0;
+  }
+  let total = 0;
+  for (let i = 0; i < reviews.length; i += 1) {
+    total += reviews[i].rating;
+  }
+  return (total / reviews.length).toFixed(1);
+}
+
 export const placemarkController = {
   index: {
     handler: async function (request, h) {
@@ -22,6 +34,7 @@ export const placemarkController = {
         category: category,
         placemark: placemark,
         reviews: reviews,
+        averageRating: calculateAverageRating(reviews),
       };
       return h.view("placemark-view", viewData);
     },
@@ -43,6 +56,7 @@ export const placemarkController = {
           category: category,
           placemark: placemark,
           reviews: reviews,
+          averageRating: calculateAverageRating(reviews),
           errors: error.details
         }).takeover().code(400);
       },
@@ -114,6 +128,7 @@ export const placemarkController = {
           category: category,
           placemark: placemark,
           reviews: reviews,
+          averageRating: calculateAverageRating(reviews),
           errors: error.details,
         }).takeover().code(400);
       },
@@ -126,6 +141,7 @@ export const placemarkController = {
         userid: loggedInUser._id,
         reviewerName: `${loggedInUser.firstName} ${loggedInUser.lastName}`,
         comment: request.payload.comment,
+        rating: Number(request.payload.rating),
       };
 
       await db.reviewStore.addReview(newReview);

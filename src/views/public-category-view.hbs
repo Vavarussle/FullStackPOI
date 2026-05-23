@@ -11,8 +11,8 @@
   {{#if category.placemarks.length}}
     <div class="columns is-multiline">
       {{#each category.placemarks}}
-        <div class="column is-one-third has-text-centered">
-          <div class="box">
+        <div class="column is-one-third has-text-centered is-flex">
+          <div class="box is-flex is-flex-direction-column is-align-items-center" style="width: 100%;">
             <div class="title is-4">
               <p>{{title}}</p>
               <a class="button mt-4 is-link" href="/public/placemark/{{_id}}">View Placemark</a>
@@ -26,11 +26,11 @@
                   style="width: 70%; height: 70%;">
               </div>
             {{/if}}
-
-            <p><strong>Description:</strong> {{description}}</p>
+            <span class="tag is-success mt-3">Public</span>
+            <p><strong>Average Rating:</strong> {{averageRating}}</p>
             <p><strong>Latitude:</strong> {{latitude}}</p>
             <p><strong>Longitude:</strong> {{longitude}}</p>
-            <span class="tag is-success mt-3">Public</span>
+            <p><strong>Description:</strong> {{description}}</p>
           </div>
         </div>
       {{/each}}

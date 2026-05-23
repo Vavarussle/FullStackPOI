@@ -28,6 +28,9 @@ The application allows users to:
 - browse public categories and public placemarks without logging in
 - add and delete placemark reviews
 - view reviews on public placemark pages
+- add 1 to 5 star style ratings to placemark reviews
+- view average rating for each placemark
+- view average rating on public placemark listings
 
 The project supports the staged architecture used in the module, with MongoDB configured for the final submission.
 
@@ -65,6 +68,8 @@ The project supports the staged architecture used in the module, with MongoDB co
 - public and private placemarks
 - public browsing of categories that contain public placemarks
 - public category pages showing only public placemarks
+- average placemark rating
+- ratings shown alongside reviews
 
 ### Categories
 - create and manage categories
@@ -81,6 +86,8 @@ The project supports the staged architecture used in the module, with MongoDB co
 - JWT secured routes
 - Swagger documentation
 - automated API tests
+- review endpoints support ratings
+- placemark review API returns rating values
 
 ### Data / Models
 - MongoDB / Mongoose models
@@ -213,6 +220,7 @@ This submission currently includes work aligned with the PlacemarkHAPI progressi
 - private POIs
 - public POIs
 - reviews
+- ratings
 - password hashing and salting
 - MongoDB persistence
 

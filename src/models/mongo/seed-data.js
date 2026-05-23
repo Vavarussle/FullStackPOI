@@ -14,12 +14,14 @@ export const seedData = {
       firstName: "Marge",
       lastName: "Simpson",
       email: "marge@simpson.com",
+      isAdmin: false,
       password: await hashPassword("secret")
     },
     bart: {
       firstName: "Bart",
       lastName: "Simpson",
       email: "bart@simpson.com",
+      isAdmin: false,
       password: await hashPassword("secret")
     }
   },
@@ -39,6 +41,7 @@ export const seedData = {
       description: "Large public park in Dublin",
       latitude: 53.355,
       longitude: -6.329,
+      isPublic: true,
       categoryid: "->categories.dublin",
       img: ""
     },
@@ -48,6 +51,7 @@ export const seedData = {
       description: "Famous brewery and tourist attraction",
       latitude: 53.3419,
       longitude: -6.2863,
+      isPublic: true,
       categoryid: "->categories.dublin",
       img: ""
     },
@@ -57,8 +61,39 @@ export const seedData = {
       description: "Historic university in Dublin",
       latitude: 53.3438,
       longitude: -6.2546,
+      isPublic: false,
       categoryid: "->categories.dublin",
       img: ""
     }
+  },
+
+  reviews: {
+    _model: "Review",
+
+    review_1: {
+      comment: "Great place to visit!",
+      rating: 5,
+      placemarkid: "->placemarks.placemark_2",
+      userid: "->users.marge",
+      reviewerName: "Marge Simpson"
+    },
+
+    review_2: {
+      comment: "Interesting history and good beer.",
+      rating: 4,
+      placemarkid: "->placemarks.placemark_2",
+      userid: "->users.bart",
+      reviewerName: "Bart Simpson"
+    },
+
+    review_3: {
+      comment: "Beautiful park with lots of space.",
+      rating: 5,
+      placemarkid: "->placemarks.placemark_2",
+      userid: "->users.homer",
+      reviewerName: "Homer Simpson"
+    }
   }
+
+  
 };

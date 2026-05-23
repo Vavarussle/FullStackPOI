@@ -135,6 +135,7 @@ suite("Placemark API tests", () => {
     const returnedReview = await placemarkService.createReview(placemark._id, placemarkReview);
 
     assert.equal(returnedReview.comment, placemarkReview.comment);
+    assert.equal(returnedReview.rating, placemarkReview.rating);
     assert.equal(returnedReview.placemarkid, placemark._id);
     assert.isDefined(returnedReview._id);
   });

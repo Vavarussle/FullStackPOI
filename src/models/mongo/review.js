@@ -13,6 +13,7 @@ const reviewSchema = new Schema({
   },
   reviewerName: String,
   comment: String,
+  rating: Number,
   createdAt: {
     type: Date,
     default: Date.now,

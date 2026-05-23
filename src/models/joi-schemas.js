@@ -61,6 +61,7 @@ export const CategoryArraySpec = Joi.array().items(CategorySpecPlus).label("Cate
 export const ReviewSpec = Joi.object()
   .keys({
     comment: Joi.string().required().min(3).max(500).example("Great place to visit"),
+    rating: Joi.number().integer().required().min(1).max(5).example(4),
   })
   .label("Review");
 

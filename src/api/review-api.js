@@ -41,6 +41,7 @@ export const reviewApi = {
         userid: loggedInUser._id,
         reviewerName: `${loggedInUser.firstName} ${loggedInUser.lastName}`,
         comment: request.payload.comment,
+        rating: Number(request.payload.rating),
       };
 
       const review = await db.reviewStore.addReview(newReview);

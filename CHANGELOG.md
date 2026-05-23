@@ -4,8 +4,24 @@ All notable changes to this project are documented in this file.
 
 The format is based on a simple academic release history for the final **Placemark** submission.
 
+## [0.13.0] - Ratings
 
-## [0.12.0] - Public / Private POIs and Reviews
+
+### Added
+- rating support for placemark reviews
+- average placemark rating display on private and public placemark pages
+- average rating display on public category placemark cards
+- API and model tests for review ratings
+
+### Improved
+- extended the review feature to support 1 to 5 ratings
+- updated review forms to capture both comment and rating
+- updated placemark and public placemark views to show rating information
+
+### Notes
+- this release extends the PlacemarkHAPI Assignment 2 review feature with ratings
+
+## [0.12.0] - Reviews
 
 ### Added
 
@@ -14,8 +30,6 @@ The format is based on a simple academic release history for the final **Placema
 - public display of placemark reviews
 - review API endpoints
 - API and model tests for reviews
-
-
 
 ### Notes
 - this release completes the reviews part for the PlacemarkHAPI Assignment 2 path

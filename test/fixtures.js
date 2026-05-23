@@ -117,4 +117,5 @@ export const publicPlacemark = {
 
 export const placemarkReview = {
   comment: "Great place to visit",
+  rating: 5,
 };

@@ -1,6 +1,17 @@
 import { db } from "../models/db.js";
 import { ReviewSpec } from "../models/joi-schemas.js";
 
+function calculateAverageRating(reviews) {
+  if (!reviews || reviews.length === 0) {
+    return 0;
+  }
+  let total = 0;
+  for (let i = 0; i < reviews.length; i += 1) {
+    total += reviews[i].rating;
+  }
+  return (total / reviews.length).toFixed(1);
+}
+
 export const publicController = {
   index: {
     auth: { mode: "try" },
@@ -26,6 +37,12 @@ export const publicController = {
 
       if (!category) {
         return h.redirect("/public");
+      }
+
+      for (let i = 0; i < category.placemarks.length; i += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        const reviews = await db.reviewStore.getReviewsByPlacemarkId(category.placemarks[i]._id);
+        category.placemarks[i].averageRating = calculateAverageRating(reviews);
       }
 
       const viewData = {
@@ -65,6 +82,7 @@ export const publicController = {
         placemark: placemark,
         category: category,
         reviews: reviews,
+        averageRating: calculateAverageRating(reviews),
         isLoggedIn: loggedInUser !== null && loggedInUser !== undefined,
         user: loggedInUser,
       };
@@ -86,6 +104,7 @@ export const publicController = {
           placemark: placemark,
           category: category,
           reviews: reviews,
+          averageRating: calculateAverageRating(reviews),
           isLoggedIn: true,
           user: request.auth.credentials,
           errors: error.details,
@@ -105,6 +124,7 @@ export const publicController = {
         userid: loggedInUser._id,
         reviewerName: `${loggedInUser.firstName} ${loggedInUser.lastName}`,
         comment: request.payload.comment,
+        rating: Number(request.payload.rating),
       };
 
       await db.reviewStore.addReview(newReview);

@@ -80,8 +80,25 @@
   </form>
 
   <div class="title is-4 mt-5">Reviews</div>
+  <p><strong>Average Rating:</strong> {{averageRating}}</p>
 
   <form class="box" action="/placemark/{{category._id}}/addreview/{{placemark._id}}" method="POST">
+
+    <div class="field">
+      <label class="label">Rating</label>
+      <div class="control">
+        <div class="select">
+          <select name="rating">
+            <option value="5">5 - Excellent</option>
+            <option value="4">4 - Good</option>
+            <option value="3">3 - Average</option>
+            <option value="2">2 - Poor</option>
+            <option value="1">1 - Very Poor</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
     <div class="field">
       <label class="label">Add Review</label>
       <div class="control">
@@ -97,6 +114,7 @@
     {{#each reviews}}
       <div class="box">
         <p><strong>{{reviewerName}}</strong></p>
+        <p><strong>Rating:</strong> {{rating}}</p>
         <p>{{comment}}</p>
 
         {{#if canDelete}}

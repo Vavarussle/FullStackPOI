@@ -122,10 +122,12 @@ suite("Placemark Model tests", () => {
       userid: user._id,
       reviewerName: `${user.firstName} ${user.lastName}`,
       comment: placemarkReview.comment,
+      rating: placemarkReview.rating,
     });
 
     assert.isDefined(review._id);
     assert.equal(review.comment, placemarkReview.comment);
+    assert.equal(review.rating, placemarkReview.rating);
     assert.equal(`${review.placemarkid}`, `${placemark._id}`);
   });
 

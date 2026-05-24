@@ -78,7 +78,7 @@ export const publicController = {
         }
       }
 
-      const shareUrl = `${request.server.info.uri}/public/placemark/${placemark._id}`;
+      const shareUrl = `${process.env.baseUrl}/public/placemark/${placemark._id}`;
 
       const viewData = {
         title: "Public Placemark",
@@ -103,7 +103,7 @@ export const publicController = {
         const category = await db.categoryStore.getCategoryById(placemark.categoryid);
         const reviews = await db.reviewStore.getReviewsByPlacemarkId(request.params.id);
 
-        const shareUrl = `${request.server.info.uri}/public/placemark/${placemark._id}`;
+        const shareUrl = `${process.env.baseUrl}/public/placemark/${placemark._id}`;
 
         return h.view("public-placemark-view", {
           title: "Public Placemark",

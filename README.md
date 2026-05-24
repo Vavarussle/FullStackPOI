@@ -158,6 +158,9 @@ npm run lint
 npm test
 npm run testmodels
 npm run testapi
+npm run coverage
+npm run coverage-text
+npm run coverage-html
 ```
 
 ## Testing
@@ -166,6 +169,7 @@ The project includes:
 - model tests
 - API tests
 - authentication / JWT-related test coverage in the API test suite
+- HTML and text coverage reports
 
 Run all tests:
 
@@ -183,6 +187,11 @@ Run API tests only:
 
 ```bash
 npm run testapi
+```
+Generate a coverage report
+
+```bash
+npm run coverage-html
 ```
 
 ## API Documentation
@@ -223,6 +232,7 @@ This submission currently includes work aligned with the PlacemarkHAPI progressi
 - ratings
 - password hashing and salting
 - MongoDB persistence
+- coverage report
 
 ## License
 

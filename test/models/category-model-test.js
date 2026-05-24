@@ -1,6 +1,6 @@
 import { assert } from "chai";
 import { db } from "../../src/models/db.js";
-import { testCategories, historicBuildings, maggie } from "../fixtures.js";
+import { historicBuildings, coastalWalks, publicPlacemark, testCategories, maggie, privatePlacemark  } from "../fixtures.js";
 import { assertSubset } from "../test-utils.js";
 
 suite("Category Model tests", () => {
@@ -9,6 +9,7 @@ suite("Category Model tests", () => {
 
   setup(async () => {
     db.init("mongo");
+    await db.placemarkStore.deleteAllPlacemarks();
     await db.categoryStore.deleteAllCategories();
     await db.userStore.deleteAll();
 
@@ -26,8 +27,12 @@ suite("Category Model tests", () => {
   });
 
   test("create a category", async () => {
-    const category = await db.categoryStore.addCategory(historicBuildings);
-    assertSubset(historicBuildings, category);
+    const categoryData = {
+      userid: user._id,
+      title: historicBuildings.title,
+    };
+    const category = await db.categoryStore.addCategory(categoryData);
+    assertSubset(categoryData, category);
     assert.isDefined(category._id);
   });
 
@@ -45,7 +50,7 @@ suite("Category Model tests", () => {
     assertSubset(historicBuildings, returnedCategory);
   });
 
-  test("delete One category - success", async () => {
+  test("delete one category - success", async () => {
     const id = insertedCategories[0]._id;
     await db.categoryStore.deleteCategoryById(id);
     const returnedCategories = await db.categoryStore.getAllCategories();
@@ -74,4 +79,70 @@ suite("Category Model tests", () => {
     const categories = await db.categoryStore.getUserCategories(user._id);
     assert.equal(categories.length, testCategories.length);
   });
+
+  test("update a category", async () => {
+
+    const category = await db.categoryStore.addCategory({
+      userid: user._id,
+      title: historicBuildings.title,
+    });
+
+    category.title = coastalWalks.title;
+    await db.categoryStore.updateCategory(category);
+
+    const updatedCategory = await db.categoryStore.getCategoryById(category._id);
+    assert.equal(updatedCategory.title, coastalWalks.title);
+  });
+
+  test("get categories with public placemarks only", async () => {
+
+    const publicCategory = await db.categoryStore.addCategory({
+      userid: user._id,
+      title: historicBuildings.title,
+    });
+
+    const privateCategory = await db.categoryStore.addCategory({
+      userid: user._id,
+      title: coastalWalks.title,
+    });
+
+    await db.placemarkStore.addPlacemark(publicCategory._id, publicPlacemark);
+    await db.placemarkStore.addPlacemark(privateCategory._id, privatePlacemark);
+
+    const returnedCategories = await db.categoryStore.getCategoriesWithPublicPlacemarks();
+
+    assert.equal(returnedCategories.length, 1);
+    assert.equal(returnedCategories[0].title, historicBuildings.title);
+    assert.equal(returnedCategories[0].placemarks.length, 1);
+    assert.equal(returnedCategories[0].placemarks[0].isPublic, true);
+  });
+
+  test("get public category by id", async () => {
+
+    const category = await db.categoryStore.addCategory({
+      userid: user._id,
+      title: historicBuildings.title,
+    });
+
+    await db.placemarkStore.addPlacemark(category._id, publicPlacemark);
+    await db.placemarkStore.addPlacemark(category._id, privatePlacemark);
+
+    const returnedCategory = await db.categoryStore.getPublicCategoryById(category._id);
+
+    assert.equal(returnedCategory.title, historicBuildings.title);
+    assert.equal(returnedCategory.placemarks.length, 1);
+    assert.equal(returnedCategory.placemarks[0].title, publicPlacemark.title);
+    assert.equal(returnedCategory.placemarks[0].isPublic, true);
+  });
+
+  test("get public category by id returns null for missing id", async () => {
+    const returnedCategory = await db.categoryStore.getPublicCategoryById();
+    assert.isNull(returnedCategory);
+  });
+
+  test("get public category by id returns null for bad id", async () => {
+    const returnedCategory = await db.categoryStore.getPublicCategoryById("507f1f77bcf86cd799439011");
+    assert.isNull(returnedCategory);
+  });
+
 });

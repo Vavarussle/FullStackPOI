@@ -1,6 +1,6 @@
 import { assert } from "chai";
 import { db } from "../../src/models/db.js";
-import { testPlacemarks, reginaldsTower, historicBuildings, maggie, publicPlacemark, placemarkReview } from "../fixtures.js";
+import { testPlacemarks, reginaldsTower, historicBuildings, maggie, publicPlacemark, placemarkReview, secondPlacemarkReview } from "../fixtures.js";
 import { assertSubset } from "../test-utils.js";
 
 suite("Placemark Model tests", () => {
@@ -14,8 +14,12 @@ suite("Placemark Model tests", () => {
     await db.userStore.deleteAll();
 
     user = await db.userStore.addUser(maggie);
-    historicBuildings.userid = user._id;
-    category = await db.categoryStore.addCategory(historicBuildings);
+    await db.reviewStore.deleteReviewsByUserId(user._id);
+
+    category = await db.categoryStore.addCategory({
+      userid: user._id,
+      title: historicBuildings.title,
+    });
 
     for (let i = 0; i < testPlacemarks.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
@@ -79,6 +83,7 @@ suite("Placemark Model tests", () => {
       latitude: 52.1248,
       longitude: -6.9302,
       img: "",
+      isPublic: false,
     };
 
     const placemarkDoc = await db.placemarkStore.getPlacemarkById(placemark._id);
@@ -90,6 +95,7 @@ suite("Placemark Model tests", () => {
     assert.equal(returnedPlacemark.latitude, updatedPlacemark.latitude);
     assert.equal(returnedPlacemark.longitude, updatedPlacemark.longitude);
     assert.equal(returnedPlacemark.img, updatedPlacemark.img);
+    assert.equal(returnedPlacemark.isPublic, updatedPlacemark.isPublic);
   });
 
   test("create a public placemark", async () => {
@@ -139,9 +145,67 @@ suite("Placemark Model tests", () => {
       userid: user._id,
       reviewerName: `${user.firstName} ${user.lastName}`,
       comment: placemarkReview.comment,
+      rating: placemarkReview.rating,
     });
 
     await db.reviewStore.deleteReviewById(review._id);
+
+    const returnedReviews = await db.reviewStore.getReviewsByPlacemarkId(placemark._id);
+    assert.equal(returnedReviews.length, 0);
+  });
+
+  test("get review by id returns null for missing id", async () => {
+    const review = await db.reviewStore.getReviewById();
+    assert.isNull(review);
+  });
+
+  test("get review by id returns null for bad id", async () => {
+    const review = await db.reviewStore.getReviewById("507f1f77bcf86cd799439011");
+    assert.isNull(review);
+  });
+
+  test("delete review by id handles bad id", async () => {
+    await db.reviewStore.deleteReviewById("bad-id");
+    assert.ok(true);
+  });
+
+  test("delete reviews by placemark id", async () => {
+    const placemark = await db.placemarkStore.addPlacemark(category._id, reginaldsTower);
+
+    await db.reviewStore.addReview({
+      placemarkid: placemark._id,
+      userid: user._id,
+      reviewerName: `${user.firstName} ${user.lastName}`,
+      comment: placemarkReview.comment,
+      rating: placemarkReview.rating,
+    });
+
+    await db.reviewStore.addReview({
+      placemarkid: placemark._id,
+      userid: user._id,
+      reviewerName: `${user.firstName} ${user.lastName}`,
+      comment: secondPlacemarkReview.comment,
+      rating: secondPlacemarkReview.rating,
+    });
+
+    await db.reviewStore.deleteReviewsByPlacemarkId(placemark._id);
+
+    const returnedReviews = await db.reviewStore.getReviewsByPlacemarkId(placemark._id);
+    assert.equal(returnedReviews.length, 0);
+  });
+
+  test("delete reviews by user id", async () => {
+    const placemark = await db.placemarkStore.addPlacemark(category._id, reginaldsTower);
+
+    await db.reviewStore.addReview({
+      placemarkid: placemark._id,
+      userid: user._id,
+      reviewerName: `${user.firstName} ${user.lastName}`,
+      comment: placemarkReview.comment,
+      rating: placemarkReview.rating,
+    });
+
+    await db.reviewStore.deleteReviewsByUserId(user._id);
 
     const returnedReviews = await db.reviewStore.getReviewsByPlacemarkId(placemark._id);
     assert.equal(returnedReviews.length, 0);

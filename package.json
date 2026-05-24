@@ -10,7 +10,26 @@
     "lint": "./node_modules/.bin/eslint . --ext .js",
     "test": "./node_modules/mocha/bin/_mocha --ui tdd test/**/*.js -exit -t 10000",
     "testmodels": "./node_modules/mocha/bin/_mocha --ui tdd test/models/**/*.js -exit",
-    "testapi": "./node_modules/mocha/bin/_mocha --ui tdd test/api/**/*.js -exit"
+    "testapi": "./node_modules/mocha/bin/_mocha --ui tdd test/api/**/*.js -exit",
+    "coverage": "c8 ./node_modules/mocha/bin/_mocha --ui tdd test/**/*.js -exit",
+    "coverage-text": "c8 --reporter=text ./node_modules/mocha/bin/_mocha --ui tdd test/**/*.js -exit",
+    "coverage-html": "c8 --reporter=html --reporter=text ./node_modules/mocha/bin/_mocha --ui tdd test/**/*.js -exit"
+      },
+  "nyc": {
+    "all": true,
+    "include": [
+      "src/**/*.js"
+    ],
+    "exclude": [
+      "test/**/*.js",
+      "src/models/mongo/seed-data.js"
+    ],
+    "reporter": [
+      "html",
+      "text"
+    ],
+    "report-dir": "coverage",
+    "cache": false
   },
   "repository": {
     "type": "git",
@@ -46,6 +65,7 @@
   },
   "devDependencies": {
     "axios": "^1.13.1",
+    "c8": "^11.0.0",
     "chai": "^6.2.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -53,6 +73,7 @@
     "eslint-plugin-import": "^2.32.0",
     "mocha": "^11.7.5",
     "nodemon": "^3.1.10",
+    "nyc": "^18.0.0",
     "prettier": "^3.6.2"
   }
 }

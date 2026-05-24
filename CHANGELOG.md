@@ -4,8 +4,19 @@ All notable changes to this project are documented in this file.
 
 The format is based on a simple academic release history for the final **Placemark** submission.
 
-## [0.13.0] - Ratings
+## [0.14.0] - Test Coverage Reporting
 
+### Added
+- coverage reporting for the project
+- HTML and text coverage report generation
+
+### Improved
+- expanded the tests to improve code coverage across authentication, categories, reviews, ratings, and utility functions
+
+### Notes
+- this release adds coverage report support for the PlacemarkHAPI
+
+## [0.13.0] - Ratings
 
 ### Added
 - rating support for placemark reviews

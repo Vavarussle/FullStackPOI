@@ -61,14 +61,8 @@ export const placemarkService = {
   },
 
   async createPlacemark(id, placemark) {
-    try {
-      const res = await axios.post(`${this.placemarkUrl}/api/categories/${id}/placemarks`, placemark, this.authHeader);
-      return res.data;
-    } catch (error) {
-      console.log("CREATE PLACEMARK STATUS:", error.response.status);
-      console.log("CREATE PLACEMARK DATA:", error.response.data);
-      throw error;
-    }
+    const res = await axios.post(`${this.placemarkUrl}/api/categories/${id}/placemarks`, placemark, this.authHeader);
+    return res.data;
   },
 
   async getPlacemark(id) {

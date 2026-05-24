@@ -8,6 +8,7 @@ suite("Category API tests", () => {
 
   setup(async () => {
     placemarkService.clearAuth();
+    await placemarkService.deleteAllUsers();
     user = await placemarkService.createUser(maggie);
     await placemarkService.authenticate(maggieCredentials);
     await placemarkService.deleteAllCategories();
@@ -69,7 +70,7 @@ suite("Category API tests", () => {
       await placemarkService.getCategory("1234");
       assert.fail("Should not return a category");
     } catch (error) {
-      assert(error.response.data.message === "No Category with this id");
+      assert.equal(error.response.data.message, "No Category with this id");
       assert.equal(error.response.data.statusCode, 503);
     }
   });
@@ -81,7 +82,7 @@ suite("Category API tests", () => {
       await placemarkService.getCategory(category._id);
       assert.fail("Should not return a category");
     } catch (error) {
-      assert(error.response.data.message === "No Category with this id");
+      assert.equal(error.response.data.message, "No Category with this id");
       assert.equal(error.response.data.statusCode, 404);
     }
   });

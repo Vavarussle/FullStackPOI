@@ -21,7 +21,9 @@ suite("Placemark API tests", () => {
     category = await placemarkService.createCategory(historicBuildings);
   });
 
-  teardown(async () => {});
+  teardown(async () => {
+    placemarkService.clearAuth();
+  });
 
   test("create placemark", async () => {
     const returnedPlacemark = await placemarkService.createPlacemark(category._id, reginaldsTower);
@@ -65,6 +67,7 @@ suite("Placemark API tests", () => {
       latitude: 52.1248,
       longitude: -6.9302,
       img: "",
+      isPublic: false,
     };
 
     const returnedPlacemark = await placemarkService.updatePlacemark(placemark._id, updatedPlacemark);

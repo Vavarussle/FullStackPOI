@@ -5,6 +5,7 @@ import { maggie, adminUser, adminCredentials, testUsers } from "../fixtures.js";
 suite("User API tests", () => {
   setup(async () => {
     placemarkService.clearAuth();
+    await placemarkService.deleteAllUsers();
   });
 
   teardown(async () => {
@@ -31,7 +32,6 @@ suite("User API tests", () => {
   });
 
   test("delete all users", async () => {
-    await placemarkService.deleteAllUsers();
     for (let i = 0; i < testUsers.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
       await placemarkService.createUser(testUsers[i]);
@@ -81,7 +81,6 @@ suite("User API tests", () => {
   });
 
   test("admin can delete a user", async () => {
-    await placemarkService.deleteAllUsers();
     const createdAdmin = await placemarkService.createUser(adminUser);
     const createdUser = await placemarkService.createUser(maggie);
 

@@ -119,3 +119,17 @@ export const placemarkReview = {
   comment: "Great place to visit",
   rating: 5,
 };
+
+export const secondPlacemarkReview = {
+  comment: "Pretty good location",
+  rating: 3,
+};
+
+export const privatePlacemark = {
+  title: "Secret Tower",
+  description: "Historic tower in a secret location",
+  latitude: 52.3000,
+  longitude: -7.2000,
+  img: "",
+  isPublic: false,
+};

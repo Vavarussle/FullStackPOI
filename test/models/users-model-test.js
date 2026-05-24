@@ -1,19 +1,19 @@
 import { assert } from "chai";
+import Boom from "@hapi/boom";
 import { db } from "../../src/models/db.js";
 import { testUsers, maggie, adminUser } from "../fixtures.js";
+import { User } from "../../src/models/mongo/user.js";
+
 
 suite("User Model tests", () => {
-  let insertedUsers = [];
 
   setup(async () => {
     db.init("mongo");
     await db.userStore.deleteAll();
-    insertedUsers = [];
 
     for (let i = 0; i < testUsers.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
-      const user = await db.userStore.addUser(testUsers[i]);
-      insertedUsers.push(user);
+      await db.userStore.addUser(testUsers[i]);
     }
   });
 
@@ -54,7 +54,8 @@ suite("User Model tests", () => {
   });
 
   test("delete one user - success", async () => {
-    const id = insertedUsers[0]._id;
+    const users = await db.userStore.getAllUsers();
+    const id = users[0]._id;
     await db.userStore.deleteUserById(id);
     const returnedUsers = await db.userStore.getAllUsers();
     assert.equal(returnedUsers.length, testUsers.length - 1);
@@ -82,4 +83,38 @@ suite("User Model tests", () => {
     const user = await db.userStore.getUserByEmail(testUsers[0].email);
     assert.deepEqual(user.email, testUsers[0].email);
   });
+
+  test("findByEmail returns a user", async () => {
+    const user = await db.userStore.addUser(maggie);
+
+    const foundUser = await User.findByEmail(maggie.email);
+
+    assert.isNotNull(foundUser);
+    assert.equal(foundUser.email, maggie.email);
+    assert.equal(`${foundUser._id}`, `${user._id}`);
+  });
+
+  test("comparePassword accepts correct password", async () => {
+    await db.userStore.addUser(maggie);
+
+    const foundUser = await User.findByEmail(maggie.email);
+    const result = foundUser.comparePassword(maggie.password);
+
+    assert.equal(`${result._id}`, `${foundUser._id}`);
+  });
+
+  test("comparePassword rejects incorrect password", async () => {
+    await db.userStore.addUser(maggie);
+
+    const foundUser = await User.findByEmail(maggie.email);
+
+    try {
+      foundUser.comparePassword("wrongpassword");
+      assert.fail("Password should not match");
+    } catch (error) {
+      assert.equal(error.output.statusCode, Boom.unauthorized().output.statusCode);
+      assert.equal(error.message, "Password mismatch");
+    }
+  });
+  
 });

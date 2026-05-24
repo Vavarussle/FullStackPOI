@@ -34,11 +34,8 @@ export const accountsController = {
         isAdmin: request.payload.isAdmin || false,
       };
 
-      const createdUser = await db.userStore.addUser(user);
-      if (createdUser) {
-        return h.response(createdUser).code(201);
-      }
-      return Boom.badImplementation("error creating user");
+      await db.userStore.addUser(user);
+      return h.redirect("/");
     },
   },
   showLogin: {

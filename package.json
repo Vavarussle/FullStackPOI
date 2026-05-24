@@ -14,22 +14,6 @@
     "coverage": "c8 ./node_modules/mocha/bin/_mocha --ui tdd test/**/*.js -exit",
     "coverage-text": "c8 --reporter=text ./node_modules/mocha/bin/_mocha --ui tdd test/**/*.js -exit",
     "coverage-html": "c8 --reporter=html --reporter=text ./node_modules/mocha/bin/_mocha --ui tdd test/**/*.js -exit"
-      },
-  "nyc": {
-    "all": true,
-    "include": [
-      "src/**/*.js"
-    ],
-    "exclude": [
-      "test/**/*.js",
-      "src/models/mongo/seed-data.js"
-    ],
-    "reporter": [
-      "html",
-      "text"
-    ],
-    "report-dir": "coverage",
-    "cache": false
   },
   "repository": {
     "type": "git",
@@ -73,7 +57,6 @@
     "eslint-plugin-import": "^2.32.0",
     "mocha": "^11.7.5",
     "nodemon": "^3.1.10",
-    "nyc": "^18.0.0",
     "prettier": "^3.6.2"
   }
 }

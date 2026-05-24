@@ -86,4 +86,14 @@ suite("Category API tests", () => {
       assert.equal(error.response.data.statusCode, 404);
     }
   });
+
+  test("create category sanitizes title", async () => {
+    const dirtyCategory = {
+      userid: user._id,
+      title: "<script>alert('x')</script>Historic Buildings",
+    };
+
+    const returnedCategory = await placemarkService.createCategory(dirtyCategory);
+    assert.equal(returnedCategory.title, "alert('x')Historic Buildings");
+  });
 });

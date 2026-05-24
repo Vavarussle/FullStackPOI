@@ -57,6 +57,7 @@ The project supports the staged architecture used in the module, with MongoDB co
 - delete account
 - admin account support
 - JWT-based API authentication
+- sanitized first name and last name during user creation
 
 ### Placemark Features
 - create, view, update, and delete placemarks
@@ -70,11 +71,15 @@ The project supports the staged architecture used in the module, with MongoDB co
 - public category pages showing only public placemarks
 - average placemark rating
 - ratings shown alongside reviews
+- sanitized reviews before saving
+- public placemark sharing
+- sanitised placemark titles and descriptions
 
 ### Categories
 - create and manage categories
 - assign placemarks to categories
 - category-based organisation of POIs
+- sanitized cateogry titles before saving
 
 ### Admin
 - admin dashboard
@@ -233,6 +238,8 @@ This submission currently includes work aligned with the PlacemarkHAPI progressi
 - password hashing and salting
 - MongoDB persistence
 - coverage report
+- input and output sanitisation for user content
+- public POI sharing
 
 ## License
 

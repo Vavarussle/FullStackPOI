@@ -163,5 +163,31 @@ suite("Placemark API tests", () => {
     assert.equal(returnedCategory.placemarks.length, testPlacemarks.length);
   });
 
+  test("create placemark sanitizes title and description", async () => {
+    const dirtyPlacemark = {
+      title: "<b>Reginald's Tower</b>",
+      description: "<script>alert('x')</script>Historic tower",
+      latitude: 52.2603,
+      longitude: -7.1101,
+      img: "",
+      isPublic: false,
+    };
+
+    const returnedPlacemark = await placemarkService.createPlacemark(category._id, dirtyPlacemark);
+    assert.equal(returnedPlacemark.title, "Reginald's Tower");
+    assert.equal(returnedPlacemark.description, "alert('x')Historic tower");
+  });
+
+  test("create review sanitizes comment", async () => {
+    const placemark = await placemarkService.createPlacemark(category._id, reginaldsTower);
+
+    const dirtyReview = {
+      comment: "<script>alert('x')</script>Great place",
+      rating: 5,
+    };
+
+    const returnedReview = await placemarkService.createReview(placemark._id, dirtyReview);
+    assert.equal(returnedReview.comment, "alert('x')Great place");
+  });
   
 });

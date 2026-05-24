@@ -91,4 +91,21 @@ suite("User API tests", () => {
     assert.equal(users.length, 1);
     assert.equal(users[0]._id, createdAdmin._id);
   });
+
+  test("create user sanitizes names", async () => {
+    const dirtyUser = {
+      firstName: "<script>Maggie</script>",
+      lastName: "<b>Simpson</b>",
+      email: "maggie2@simpson.com",
+      password: "secret",
+      isAdmin: false,
+    };
+
+    const returnedUser = await placemarkService.createUser(dirtyUser);
+    assert.equal(returnedUser.firstName, "Maggie");
+    assert.equal(returnedUser.lastName, "Simpson");
+  });
+
+
+  
 });

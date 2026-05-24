@@ -1,6 +1,7 @@
 import Boom from "@hapi/boom";
 import { db } from "../models/db.js";
 import { IdSpec, PlacemarkSpec, PlacemarkSpecPlus, PlacemarkArraySpec } from "../models/joi-schemas.js";
+import { sanitizeText, sanitizeLongText } from "../utils/sanitize-utils.js";
 
 export const placemarkApi = {
   find: {
@@ -58,8 +59,8 @@ export const placemarkApi = {
       }
 
       const placemark = {
-        title: request.payload.title,
-        description: request.payload.description,
+        title: sanitizeText(request.payload.title),
+        description: sanitizeLongText(request.payload.description),
         latitude: Number(request.payload.latitude),
         longitude: Number(request.payload.longitude),
         img: request.payload.img || "",
@@ -93,8 +94,8 @@ export const placemarkApi = {
       }
 
       const updatedPlacemark = {
-        title: request.payload.title,
-        description: request.payload.description,
+        title: sanitizeText(request.payload.title),
+        description: sanitizeLongText(request.payload.description),
         latitude: Number(request.payload.latitude),
         longitude: Number(request.payload.longitude),
         img: request.payload.img || "",

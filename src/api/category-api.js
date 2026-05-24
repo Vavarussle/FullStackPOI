@@ -1,6 +1,7 @@
 import Boom from "@hapi/boom";
 import { db } from "../models/db.js";
 import { IdSpec, CategorySpec, CategorySpecPlus, CategoryArraySpec } from "../models/joi-schemas.js";
+import { sanitizeText } from "../utils/sanitize-utils.js";
 
 export const categoryApi = {
   find: {
@@ -49,7 +50,10 @@ export const categoryApi = {
     validate: { payload: CategorySpec },
     response: { schema: CategorySpecPlus, failAction: "log" },
     handler: async function (request, h) {
-      const category = request.payload;
+      const category = {
+        userid: request.payload.userid,
+        title: sanitizeText(request.payload.title),
+      };
       const newCategory = await db.categoryStore.addCategory(category);
       if (newCategory) {
         return h.response(newCategory).code(201);

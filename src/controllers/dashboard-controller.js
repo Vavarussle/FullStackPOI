@@ -1,5 +1,6 @@
 import { CategorySpec } from "../models/joi-schemas.js";
 import { db } from "../models/db.js";
+import { sanitizeText } from "../utils/sanitize-utils.js";
 
 export const dashboardController = {
   index: {
@@ -37,7 +38,7 @@ export const dashboardController = {
       const loggedInUser = request.auth.credentials;
       const newCategory = {
         userid: loggedInUser._id,
-        title: request.payload.title,
+        title: sanitizeText(request.payload.title),
       };
       await db.categoryStore.addCategory(newCategory);
       return h.redirect("/dashboard");

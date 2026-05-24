@@ -4,6 +4,17 @@ All notable changes to this project are documented in this file.
 
 The format is based on a simple academic release history for the final **Placemark** submission.
 
+## [0.15.0] - Sanitization and Share
+
+### Added
+- sanitization of category, placemark, review, and user text inputs
+- shareable public placemark link on the public placemark page
+- copy-link functionality for public placemark sharing
+- API tests for sanitization behaviour
+
+### Notes
+- this release adds sanitization and a share feature to the PlacemarkHAPI Assignment 2 implementation
+
 ## [0.14.0] - Test Coverage Reporting
 
 ### Added

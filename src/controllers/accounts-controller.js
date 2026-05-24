@@ -1,6 +1,7 @@
 import { UserSpec, UserCredentialsSpec } from "../models/joi-schemas.js";
 import { db } from "../models/db.js";
 import { comparePasswords } from "../utils/password-utils.js";
+import { sanitizeText } from "../utils/sanitize-utils.js";
 
 export const accountsController = {
   index: {
@@ -25,9 +26,19 @@ export const accountsController = {
       },
     },
     handler: async function (request, h) {
-      const user = request.payload;
-      await db.userStore.addUser(user);
-      return h.redirect("/");
+      const user = {
+        firstName: sanitizeText(request.payload.firstName),
+        lastName: sanitizeText(request.payload.lastName),
+        email: request.payload.email.trim().toLowerCase(),
+        password: request.payload.password,
+        isAdmin: request.payload.isAdmin || false,
+      };
+
+      const createdUser = await db.userStore.addUser(user);
+      if (createdUser) {
+        return h.response(createdUser).code(201);
+      }
+      return Boom.badImplementation("error creating user");
     },
   },
   showLogin: {

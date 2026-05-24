@@ -1,5 +1,6 @@
 import { db } from "../models/db.js";
 import { ReviewSpec } from "../models/joi-schemas.js";
+import { sanitizeLongText } from "../utils/sanitize-utils.js";
 
 function calculateAverageRating(reviews) {
   if (!reviews || reviews.length === 0) {
@@ -77,12 +78,15 @@ export const publicController = {
         }
       }
 
+      const shareUrl = `${request.server.info.uri}/public/placemark/${placemark._id}`;
+
       const viewData = {
         title: "Public Placemark",
         placemark: placemark,
         category: category,
         reviews: reviews,
         averageRating: calculateAverageRating(reviews),
+        shareUrl: shareUrl,
         isLoggedIn: loggedInUser !== null && loggedInUser !== undefined,
         user: loggedInUser,
       };
@@ -99,12 +103,15 @@ export const publicController = {
         const category = await db.categoryStore.getCategoryById(placemark.categoryid);
         const reviews = await db.reviewStore.getReviewsByPlacemarkId(request.params.id);
 
+        const shareUrl = `${request.server.info.uri}/public/placemark/${placemark._id}`;
+
         return h.view("public-placemark-view", {
           title: "Public Placemark",
           placemark: placemark,
           category: category,
           reviews: reviews,
           averageRating: calculateAverageRating(reviews),
+          shareUrl: shareUrl,
           isLoggedIn: true,
           user: request.auth.credentials,
           errors: error.details,
@@ -123,7 +130,7 @@ export const publicController = {
         placemarkid: request.params.id,
         userid: loggedInUser._id,
         reviewerName: `${loggedInUser.firstName} ${loggedInUser.lastName}`,
-        comment: request.payload.comment,
+        comment: sanitizeLongText(request.payload.comment),
         rating: Number(request.payload.rating),
       };
 

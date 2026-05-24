@@ -1,6 +1,7 @@
 import Boom from "@hapi/boom";
 import { db } from "../models/db.js";
 import { IdSpec, ReviewSpec, ReviewSpecPlus, ReviewArraySpec } from "../models/joi-schemas.js";
+import { sanitizeLongText } from "../utils/sanitize-utils.js";
 
 export const reviewApi = {
   findByPlacemark: {
@@ -40,7 +41,7 @@ export const reviewApi = {
         placemarkid: request.params.id,
         userid: loggedInUser._id,
         reviewerName: `${loggedInUser.firstName} ${loggedInUser.lastName}`,
-        comment: request.payload.comment,
+        comment: sanitizeLongText(request.payload.comment),
         rating: Number(request.payload.rating),
       };
 

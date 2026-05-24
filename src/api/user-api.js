@@ -3,6 +3,7 @@ import { db } from "../models/db.js";
 import { createToken } from "./jwt-utils.js";
 import { UserSpec, UserSpecPlus, UserArray, UserCredentialsSpec } from "../models/joi-schemas.js";
 import { comparePasswords } from "../utils/password-utils.js";
+import { sanitizeText } from "../utils/sanitize-utils.js";
 
 export const userApi = {
   find: {
@@ -45,9 +46,17 @@ export const userApi = {
     validate: { payload: UserSpec },
     response: { schema: UserSpecPlus, failAction: "log" },
     handler: async function (request, h) {
-      const user = await db.userStore.addUser(request.payload);
-      if (user) {
-        return h.response(user).code(201);
+      const user = {
+        firstName: sanitizeText(request.payload.firstName),
+        lastName: sanitizeText(request.payload.lastName),
+        email: request.payload.email.trim().toLowerCase(),
+        password: request.payload.password,
+        isAdmin: request.payload.isAdmin || false,
+      };
+
+      const createdUser = await db.userStore.addUser(user);
+      if (createdUser) {
+        return h.response(createdUser).code(201);
       }
       return Boom.badImplementation("error creating user");
     },

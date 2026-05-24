@@ -1,6 +1,8 @@
 import { PlacemarkSpec , ReviewSpec } from "../models/joi-schemas.js";
 import { db } from "../models/db.js";
 import { imageStore } from "../models/image-store.js";
+import { sanitizeText, sanitizeLongText } from "../utils/sanitize-utils.js";
+
 
 
 function calculateAverageRating(reviews) {
@@ -69,8 +71,8 @@ export const placemarkController = {
         imageUrl = await imageStore.uploadImage(file);
       }
       const newPlacemark = {
-        title: request.payload.title,
-        description: request.payload.description,
+        title: sanitizeText(request.payload.title),
+        description: sanitizeLongText(request.payload.description),
         latitude: Number(request.payload.latitude),
         longitude: Number(request.payload.longitude),
         img: imageUrl,
@@ -140,7 +142,7 @@ export const placemarkController = {
         placemarkid: request.params.placemarkid,
         userid: loggedInUser._id,
         reviewerName: `${loggedInUser.firstName} ${loggedInUser.lastName}`,
-        comment: request.payload.comment,
+        comment: sanitizeLongText(request.payload.comment),
         rating: Number(request.payload.rating),
       };
 
